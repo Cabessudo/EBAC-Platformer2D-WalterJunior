@@ -373,6 +373,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   friction: {x: 0.1, y: 0}
   speed: 5
+  speedRun: 10
   jumpForce: 10
 --- !u!1 &1254242512
 GameObject:

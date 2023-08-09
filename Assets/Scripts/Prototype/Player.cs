@@ -9,6 +9,7 @@ public class Player : MonoBehaviour
     private Vector2 velocity;
     public Vector2 friction = new Vector2(.1f, 0);
     public float speed;
+    public float speedRun;
     public float jumpForce;
 
     // Start is called before the first frame update
@@ -28,11 +29,11 @@ public class Player : MonoBehaviour
     {
         if(Input.GetKey(KeyCode.D))
         {
-            _rb.velocity = new Vector2(speed, _rb.velocity.y);
+            _rb.velocity = new Vector2(Input.GetKey(KeyCode.LeftShift) ? speedRun : speed, _rb.velocity.y);
         }
         else if(Input.GetKey(KeyCode.A))
         {
-            _rb.velocity = new Vector2(-speed, _rb.velocity.y);
+            _rb.velocity = new Vector2(Input.GetKey(KeyCode.LeftShift) ? -speedRun : -speed, _rb.velocity.y);
         }
 
         if(_rb.velocity.x > 0)
