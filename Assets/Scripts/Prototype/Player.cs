@@ -1,7 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using DG.Tweening; 
+using DG.Tweening;
+using UnityEngine.UI;
+using UnityEngine.Video;
+using Unity.VisualScripting;
 
 public class Player : MonoBehaviour
 {
@@ -17,10 +20,21 @@ public class Player : MonoBehaviour
     public float jumpForce;
 
     [Header("Animation")]
-    public float duration;
+    //Jump
+    public float jumpDuration;
     public float jumpScaleY = 1.5f;
     public float jumpScaleX = 0.5f;
-    public Ease ease = Ease.OutBack;
+    public Ease easeIn = Ease.InBack;
+    public Ease easeOut = Ease.OutBack;
+    //Fall
+    public bool grounded;
+    public float fallDuration;
+    public float fallX;
+    public float fallY;
+
+    [Header("Live & Death")]
+    public Image[] hearts;
+    
 
     // Start is called before the first frame update
     void Start()
@@ -33,6 +47,8 @@ public class Player : MonoBehaviour
     {
         Jump();
         Movement();
+        Falling();
+        HeartUI();
     }
 
     void Movement()
@@ -60,10 +76,11 @@ public class Player : MonoBehaviour
     {
         if(Input.GetKeyDown(KeyCode.Space))
         {
-            _rb.velocity = Vector3.up * jumpForce;
+            _rb.velocity = Vector2.up * jumpForce;
             _rb.transform.localScale = Vector2.one;
+            grounded = false;
 
-            DOTween.Kill(_rb.transform);
+            _rb.transform.DOKill();
             
             JumpAnimation();
         }
@@ -71,7 +88,76 @@ public class Player : MonoBehaviour
 
     void JumpAnimation()
     {
-        _rb.transform.DOScaleY(jumpScaleY, duration).SetLoops(2, LoopType.Yoyo).SetEase(ease);
-        _rb.transform.DOScaleX(jumpScaleX, duration).SetLoops(2, LoopType.Yoyo).SetEase(ease);
+        _rb.transform.DOScaleY(jumpScaleY, jumpDuration/2).SetEase(easeIn).OnComplete(
+            delegate
+            {
+                _rb.transform.DOScaleY(1, jumpDuration/2).SetEase(easeOut);
+            });
+
+        _rb.transform.DOScaleX(jumpScaleX, jumpDuration/2).SetEase(easeIn).OnComplete(
+            delegate
+            {
+                _rb.transform.DOScaleX(1, jumpDuration/2).SetEase(easeOut);
+            });
+    }
+
+    public void OnCollisionEnter2D(Collision2D collision)
+    {
+        if(collision.gameObject.CompareTag("Ground") && !grounded)
+        {
+            Fall();
+            grounded = true;
+        }
+    }
+
+    void Fall()
+    {
+        _rb.transform.DOKill();
+
+        _rb.transform.DOScaleX(fallX, fallDuration/2).SetEase(easeIn).OnComplete(
+            delegate
+            {
+                _rb.transform.DOScaleX(1, fallDuration/2).SetEase(easeOut);
+            });
+
+        _rb.transform.DOScaleY(fallY, fallDuration/2).SetEase(easeIn).OnComplete(
+            delegate
+            {
+                _rb.transform.DOScaleY(1, fallDuration/2).SetEase(easeOut);
+            });
+    }
+
+    void Falling()
+    {
+        if(!grounded)
+        {
+            StartCoroutine(FallingAnimation());
+        }
+        else
+        {
+            _rb.transform.localScale = new Vector2(1, 1);
+            StopAllCoroutines();
+        }
+    }
+
+    IEnumerator FallingAnimation()
+    {
+        yield return new WaitForSeconds(5);
+        _rb.transform.localScale = new Vector2(jumpScaleX, jumpScaleY);
+    }
+
+    void HeartUI()
+    {
+        for(int i = 0; i < hearts.Length; i++)
+        {
+            if(i < HealthBase.Instance.currentLife)
+            {
+                hearts[i].enabled = true;
+            }
+            else
+            {
+                hearts[i].enabled = false;
+            }
+        }
     }
 }
