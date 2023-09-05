@@ -5,10 +5,12 @@ using DG.Tweening;
 using UnityEngine.UI;
 using UnityEngine.Video;
 using Unity.VisualScripting;
+using UnityEditor.Callbacks;
 
 public class Player : MonoBehaviour
 {
 
+    public static Player Instance;
     [Header("References")]
     private Rigidbody2D _rb;
 
@@ -24,7 +26,6 @@ public class Player : MonoBehaviour
     public float jumpDuration;
     public float jumpScaleY = 1.5f;
     public float jumpScaleX = 0.5f;
-    public Ease easeIn = Ease.InBack;
     public Ease easeOut = Ease.OutBack;
     //Fall
     public bool grounded;
@@ -34,21 +35,27 @@ public class Player : MonoBehaviour
 
     [Header("Live & Death")]
     public Image[] hearts;
+    public Ease easeDie;
     
 
     // Start is called before the first frame update
     void Start()
     {
         _rb = GetComponent<Rigidbody2D>();
+        Instance = this;
     }
 
     // Update is called once per frame
     void Update()
     {
-        Jump();
-        Movement();
         Falling();
         HeartUI();
+
+        if(HealthBase.Instance._isDead) return;
+
+        Jump();
+        Movement();
+        
     }
 
     void Movement()
@@ -88,13 +95,13 @@ public class Player : MonoBehaviour
 
     void JumpAnimation()
     {
-        _rb.transform.DOScaleY(jumpScaleY, jumpDuration/2).SetEase(easeIn).OnComplete(
+        _rb.transform.DOScaleY(jumpScaleY, jumpDuration/2).SetEase(easeOut).OnComplete(
             delegate
             {
                 _rb.transform.DOScaleY(1, jumpDuration/2).SetEase(easeOut);
             });
 
-        _rb.transform.DOScaleX(jumpScaleX, jumpDuration/2).SetEase(easeIn).OnComplete(
+        _rb.transform.DOScaleX(jumpScaleX, jumpDuration/2).SetEase(easeOut).OnComplete(
             delegate
             {
                 _rb.transform.DOScaleX(1, jumpDuration/2).SetEase(easeOut);
@@ -114,13 +121,13 @@ public class Player : MonoBehaviour
     {
         _rb.transform.DOKill();
 
-        _rb.transform.DOScaleX(fallX, fallDuration/2).SetEase(easeIn).OnComplete(
+        _rb.transform.DOScaleX(fallX, fallDuration/2).SetEase(easeOut).OnComplete(
             delegate
             {
                 _rb.transform.DOScaleX(1, fallDuration/2).SetEase(easeOut);
             });
 
-        _rb.transform.DOScaleY(fallY, fallDuration/2).SetEase(easeIn).OnComplete(
+        _rb.transform.DOScaleY(fallY, fallDuration/2).SetEase(easeOut).OnComplete(
             delegate
             {
                 _rb.transform.DOScaleY(1, fallDuration/2).SetEase(easeOut);
@@ -159,5 +166,11 @@ public class Player : MonoBehaviour
                 hearts[i].enabled = false;
             }
         }
+    }
+
+    public void DeadAnimation()
+    {
+        _rb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
+        _rb.transform.DORotate(new Vector3(0, 0, -360), HealthBase.Instance.delayToDie, RotateMode.FastBeyond360).SetEase(easeDie);
     }
 }

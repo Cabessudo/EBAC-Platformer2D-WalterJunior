@@ -3,11 +3,48 @@ using System.Collections.Generic;
 using UnityEngine;
 using Ebac.Core.Singleton;
 using DG.Tweening;
+using UnityEngine.SceneManagement;
 
-public class GameManager : Singleton<GameManager>
+public class GameManager : MonoBehaviour
 {
 
-    [Header("Player")]
+    public static GameManager Instance;
+
+    [Header("References")]
+    public GameObject gameOverText;
+    private GameObject _player;
+
+    [Header("Variables")]
+    public bool gameOver;
+
+    void Update()
+    {
+        FindPlayer();
+
+        if(gameOver)
+        ShowGameOver();
+    }
+
+    void FindPlayer()
+    {
+        _player = GameObject.FindGameObjectWithTag("Player");
+
+        if(_player == null)
+        gameOver = true;
+    }
+
+    void ShowGameOver()
+    {
+        gameOverText.SetActive(true);
+        gameObject.transform.DOScale(new Vector2(1.1f, 1.1f), 1).SetLoops(-1, LoopType.Yoyo);
+    }
+
+    public void Restart()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+    }
+
+    /*[Header("Player")]
     public GameObject playerPrefab;
     private GameObject _currentPlayer;
 
@@ -46,5 +83,5 @@ public class GameManager : Singleton<GameManager>
         _currentPlayer.SetActive(true);
         _currentPlayer.transform.position = spawnPoint.position;
         _currentPlayer.transform.DOScale(0, duration).SetEase(ease).SetDelay(delay).From();
-    }
+    }*/
 }

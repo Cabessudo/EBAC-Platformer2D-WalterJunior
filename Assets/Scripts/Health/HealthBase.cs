@@ -10,7 +10,7 @@ public class HealthBase : MonoBehaviour
     public int currentLife;
     public bool destroyOnKill;
     public bool _isDead = false;
-    private int delayToDie = 1;
+    public float delayToDie = 1;
 
     void Awake()
     {
@@ -42,6 +42,7 @@ public class HealthBase : MonoBehaviour
 
         if(destroyOnKill)
         {
+            Player.Instance.DeadAnimation();
             Destroy(gameObject, delayToDie);
         }
     }
