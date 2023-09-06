@@ -15,9 +15,8 @@ public class AnimationTest : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    void Start()
     {
-        if(Input.GetKeyDown(keyToFly))
-        anim.SetBool(triggerToPlay, !anim.GetBool(triggerToPlay));
+        anim.SetBool(triggerToPlay, true);
     }
 }

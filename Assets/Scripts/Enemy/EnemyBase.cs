@@ -15,7 +15,7 @@ public class EnemyBase : MonoBehaviour
 
     void Start()
     {
-        rb.transform.DOMoveX(-3, 1).SetEase(ease).SetLoops(-1, LoopType.Yoyo);
+        //rb.transform.DOMoveX(-3, 1).SetEase(ease).SetLoops(-1, LoopType.Yoyo);
     }
 
     void OnCollisionEnter2D(Collision2D collision)

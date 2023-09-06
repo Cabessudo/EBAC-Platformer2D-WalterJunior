@@ -13,15 +13,18 @@ public class Player : MonoBehaviour
     public static Player Instance;
     [Header("References")]
     private Rigidbody2D _rb;
+    public BoxCollider2D collisor;
 
     [Header("Movement")]
     private Vector2 velocity;
     public Vector2 friction = new Vector2(.1f, 0);
     public float speed;
+    private float _flatSpeed;
     public float speedRun;
     public float jumpForce;
 
     [Header("Animation")]
+    public Animator anim;
     //Jump
     public float jumpDuration;
     public float jumpScaleY = 1.5f;
@@ -32,6 +35,11 @@ public class Player : MonoBehaviour
     public float fallDuration;
     public float fallX;
     public float fallY;
+    //Movement
+    public float durationToSwipe = .1f;
+    public string triggerToWalk = "Walk";
+    public string triggerToRun = "Run";
+    private bool direction;
 
     [Header("Live & Death")]
     public Image[] hearts;
@@ -42,6 +50,8 @@ public class Player : MonoBehaviour
     void Start()
     {
         _rb = GetComponent<Rigidbody2D>();
+        _flatSpeed = speed;
+        direction = true;
         Instance = this;
     }
 
@@ -62,13 +72,40 @@ public class Player : MonoBehaviour
     {
         if(Input.GetKey(KeyCode.D))
         {
-            _rb.velocity = new Vector2(Input.GetKey(KeyCode.LeftShift) ? speedRun : speed, _rb.velocity.y);
+            _rb.velocity = new Vector2(speed, _rb.velocity.y);
+            direction = true;
+            anim.SetBool(triggerToWalk, true);
         }
         else if(Input.GetKey(KeyCode.A))
         {
-            _rb.velocity = new Vector2(Input.GetKey(KeyCode.LeftShift) ? -speedRun : -speed, _rb.velocity.y);
+            _rb.velocity = new Vector2(-speed, _rb.velocity.y);
+            direction = false;
+            anim.SetBool(triggerToWalk, true);
+        }
+        else
+        {
+            anim.SetBool(triggerToWalk, false);
         }
 
+        //Change Direction
+        if(direction)
+        _rb.transform.DOScaleX(1, durationToSwipe);
+        else
+        _rb.transform.DOScaleX(-1, durationToSwipe);
+        
+        //Run
+        if(Input.GetKey(KeyCode.LeftShift))
+        {
+            anim.SetBool(triggerToRun, true);
+            speed = speedRun;
+        }
+        else
+        {
+            anim.SetBool(triggerToRun, false);
+            speed = _flatSpeed;
+        }
+
+        //Friction
         if(_rb.velocity.x > 0)
         {
             _rb.velocity -= friction;            
@@ -170,6 +207,7 @@ public class Player : MonoBehaviour
 
     public void DeadAnimation()
     {
+        collisor.enabled = false;
         _rb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
         _rb.transform.DORotate(new Vector3(0, 0, -360), HealthBase.Instance.delayToDie, RotateMode.FastBeyond360).SetEase(easeDie);
     }
