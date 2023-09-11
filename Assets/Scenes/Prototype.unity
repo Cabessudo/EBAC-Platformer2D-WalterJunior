@@ -1174,7 +1174,7 @@ MonoBehaviour:
   fallDuration: 0.2
   fallX: 1.2
   fallY: 0.7
-  durationToSwipe: 1
+  durationToSwipe: 0.3
   triggerToWalk: Walk
   triggerToRun: Run
   direction: 0
