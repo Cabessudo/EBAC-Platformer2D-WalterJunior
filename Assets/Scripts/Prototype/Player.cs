@@ -39,7 +39,7 @@ public class Player : MonoBehaviour
     public float durationToSwipe = .1f;
     public string triggerToWalk = "Walk";
     public string triggerToRun = "Run";
-    private bool direction;
+    public bool direction;
 
     [Header("Live & Death")]
     public Image[] hearts;
@@ -121,8 +121,12 @@ public class Player : MonoBehaviour
         if(Input.GetKeyDown(KeyCode.Space))
         {
             _rb.velocity = Vector2.up * jumpForce;
-            _rb.transform.localScale = Vector2.one;
             grounded = false;
+
+            if(direction)
+            _rb.transform.localScale = Vector2.one;
+            else
+            _rb.transform.localScale = new Vector2(-1, 1);
 
             _rb.transform.DOKill();
             
@@ -132,17 +136,28 @@ public class Player : MonoBehaviour
 
     void JumpAnimation()
     {
-        _rb.transform.DOScaleY(jumpScaleY, jumpDuration/2).SetEase(easeOut).OnComplete(
-            delegate
-            {
-                _rb.transform.DOScaleY(1, jumpDuration/2).SetEase(easeOut);
-            });
-
-        _rb.transform.DOScaleX(jumpScaleX, jumpDuration/2).SetEase(easeOut).OnComplete(
+        if(direction)
+        {
+            _rb.transform.DOScaleX(jumpScaleX, jumpDuration/2).SetEase(easeOut).OnComplete(
             delegate
             {
                 _rb.transform.DOScaleX(1, jumpDuration/2).SetEase(easeOut);
             });
+        }    
+        else
+        {
+            _rb.transform.DOScaleX(-jumpScaleX, jumpDuration/2).SetEase(easeOut).OnComplete(
+            delegate
+            {
+                _rb.transform.DOScaleX(-1, jumpDuration/2).SetEase(easeOut);
+            });
+        }
+
+        _rb.transform.DOScaleY(jumpScaleY, jumpDuration/2).SetEase(easeOut).OnComplete(
+        delegate
+        {
+            _rb.transform.DOScaleY(1, jumpDuration/2).SetEase(easeOut);
+        });
     }
 
     public void OnCollisionEnter2D(Collision2D collision)
@@ -158,11 +173,23 @@ public class Player : MonoBehaviour
     {
         _rb.transform.DOKill();
 
-        _rb.transform.DOScaleX(fallX, fallDuration/2).SetEase(easeOut).OnComplete(
+        if(direction)
+        {
+            _rb.transform.DOScaleX(fallX, fallDuration/2).SetEase(easeOut).OnComplete(
             delegate
             {
                 _rb.transform.DOScaleX(1, fallDuration/2).SetEase(easeOut);
             });
+        }
+
+        if(!direction)
+        {
+            _rb.transform.DOScaleX(-fallX, fallDuration/2).SetEase(easeOut).OnComplete(
+                delegate
+                {
+                    _rb.transform.DOScaleX(-1, fallDuration/2).SetEase(easeOut);
+                });
+        }
 
         _rb.transform.DOScaleY(fallY, fallDuration/2).SetEase(easeOut).OnComplete(
             delegate
@@ -179,7 +206,10 @@ public class Player : MonoBehaviour
         }
         else
         {
+            if(direction)
             _rb.transform.localScale = new Vector2(1, 1);
+            else
+            _rb.transform.localScale = new Vector2(-1, 1);
             StopAllCoroutines();
         }
     }
@@ -187,7 +217,10 @@ public class Player : MonoBehaviour
     IEnumerator FallingAnimation()
     {
         yield return new WaitForSeconds(5);
+        if(direction)
         _rb.transform.localScale = new Vector2(jumpScaleX, jumpScaleY);
+        else
+        _rb.transform.localScale = new Vector2(-jumpScaleX, -jumpScaleY);
     }
 
     void HeartUI()

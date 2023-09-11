@@ -1174,9 +1174,10 @@ MonoBehaviour:
   fallDuration: 0.2
   fallX: 1.2
   fallY: 0.7
-  durationToSwipe: 0.1
+  durationToSwipe: 1
   triggerToWalk: Walk
   triggerToRun: Run
+  direction: 0
   hearts:
   - {fileID: 1149622286}
   - {fileID: 29767186}
@@ -1599,7 +1600,6 @@ GameObject:
   - component: {fileID: 1556936298}
   - component: {fileID: 1556936297}
   - component: {fileID: 1556936300}
-  - component: {fileID: 1556936301}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -1708,18 +1708,6 @@ MonoBehaviour:
   m_CameraActivatedEvent:
     m_PersistentCalls:
       m_Calls: []
---- !u!114 &1556936301
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1556936296}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ac19eb56e266e7e4eb6f2b369c642ae0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &1618186879
 GameObject:
   m_ObjectHideFlags: 0
@@ -1774,7 +1762,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1665163083}
   - component: {fileID: 1665163082}
-  - component: {fileID: 1665163084}
   m_Layer: 0
   m_Name: CM vcam1
   m_TagString: Untagged
@@ -1836,18 +1823,6 @@ Transform:
   m_Father: {fileID: 1556936299}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1665163084
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1665163081}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ac19eb56e266e7e4eb6f2b369c642ae0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1001 &1707345996
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2497,7 +2472,8 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
       value: GameManager, Assembly-CSharp
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 7579858261489902084, guid: 66711c5239292fa438bf701db9d4052c, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 66711c5239292fa438bf701db9d4052c, type: 3}
 --- !u!1001 &8886100416300117904
 PrefabInstance:
