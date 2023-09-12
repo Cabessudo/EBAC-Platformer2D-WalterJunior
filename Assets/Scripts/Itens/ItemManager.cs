@@ -1,20 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Ebac.Core.Singleton;
 
-public class ItemManager : MonoBehaviour
-{
-
-    public static ItemManager Instance; 
+public class ItemManager : Singleton<ItemManager>
+{ 
     public int coins;
-
-    void Awake()
-    {
-        if(Instance == null)
-        Instance = this;
-        else
-        Destroy(gameObject);
-    }
 
     void Start()
     {

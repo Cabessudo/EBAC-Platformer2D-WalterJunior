@@ -6,10 +6,8 @@ using DG.Tweening;
 using UnityEngine.SceneManagement;
 using TMPro;
 
-public class GameManager : MonoBehaviour
+public class GameManager : Singleton<GameManager>
 {
-
-    public static GameManager Instance;
 
     [Header("References")]
     public GameObject gameOverText;

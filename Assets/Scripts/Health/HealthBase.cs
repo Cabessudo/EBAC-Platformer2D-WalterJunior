@@ -2,10 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.PlayerLoop;
+using Ebac.Core.Singleton;
 
-public class HealthBase : MonoBehaviour
+public class HealthBase : Singleton<HealthBase>
 {
-    public static HealthBase Instance;
+    [SerializeField] FlashColor _flashColor;
     private int _life = 3;
     public int currentLife;
     public bool destroyOnKill;
@@ -29,6 +30,7 @@ public class HealthBase : MonoBehaviour
         if(_isDead) return;
 
         currentLife -= damage;
+        _flashColor.Flash();
 
         if(currentLife <= 0)
         {
