@@ -17,7 +17,6 @@ public class ItemCollatablesBase : MonoBehaviour
 
     public virtual void Collect()
     {
-        gameObject.SetActive(false);
         Debug.Log("Collected");
         OnCollect();
     }
