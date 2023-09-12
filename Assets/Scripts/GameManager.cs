@@ -4,6 +4,7 @@ using UnityEngine;
 using Ebac.Core.Singleton;
 using DG.Tweening;
 using UnityEngine.SceneManagement;
+using TMPro;
 
 public class GameManager : MonoBehaviour
 {
@@ -13,13 +14,16 @@ public class GameManager : MonoBehaviour
     [Header("References")]
     public GameObject gameOverText;
     private GameObject _player;
+    public TextMeshProUGUI coinText;
 
     [Header("Variables")]
     public bool gameOver;
+    public int coin;
 
     void Update()
     {
         FindPlayer();
+        UpdateCoinText();
 
         if(gameOver)
         ShowGameOver();
@@ -42,6 +46,11 @@ public class GameManager : MonoBehaviour
     public void Restart()
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+    }
+
+    public void UpdateCoinText()
+    {
+        coinText.SetText(ItemManager.Instance.coins + " x");
     }
 
     /*[Header("Player")]
