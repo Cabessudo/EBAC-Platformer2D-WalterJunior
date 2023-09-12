@@ -4,13 +4,13 @@ using UnityEngine;
 using DG.Tweening;
 using UnityEngine.UI;
 using UnityEngine.Video;
-using Unity.VisualScripting;
+// using Unity.VisualScripting;
 using UnityEditor.Callbacks;
+using Ebac.Core.Singleton;
 
-public class Player : MonoBehaviour
+public class Player : Singleton<Player>
 {
 
-    public static Player Instance;
     [Header("References")]
     private Rigidbody2D _rb;
     public BoxCollider2D collisor;
@@ -43,7 +43,8 @@ public class Player : MonoBehaviour
 
     [Header("Live & Death")]
     public Image[] hearts;
-    public Ease easeDie;
+    //Animation Death
+    public string triggerDeath = "Death";
     
 
     // Start is called before the first frame update
@@ -85,6 +86,7 @@ public class Player : MonoBehaviour
         else
         {
             anim.SetBool(triggerToWalk, false);
+            anim.SetBool(triggerToRun, false);
         }
 
         //Change Direction
@@ -240,8 +242,13 @@ public class Player : MonoBehaviour
 
     public void DeadAnimation()
     {
+        anim.SetTrigger(triggerDeath);
+    }
+
+    /*public void DeadAnimation()
+    {
         collisor.enabled = false;
         _rb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
         _rb.transform.DORotate(new Vector3(0, 0, -360), HealthBase.Instance.delayToDie, RotateMode.FastBeyond360).SetEase(easeDie);
-    }
+    }*/
 }
