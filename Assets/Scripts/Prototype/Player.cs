@@ -14,6 +14,7 @@ public class Player : Singleton<Player>
     [Header("References")]
     private Rigidbody2D _rb;
     public BoxCollider2D collisor;
+    public JumpStyle currentJump;
 
     [Header("Movement")]
     private Vector2 velocity;
@@ -25,16 +26,24 @@ public class Player : Singleton<Player>
 
     [Header("Animation")]
     public Animator anim;
-    //Jump
+    //Jump Up
     public float jumpDuration;
     public float jumpScaleY = 1.5f;
     public float jumpScaleX = 0.5f;
     public Ease easeOut = Ease.OutBack;
+    private string triggerJump = "JumpUp";
+    //Jump Down
+    private string triggerFall = "JumpDown";
+    //Jump Landing
+    private string triggerLanding = "JumpLanding";
+    public float timeToLand = 1;
     //Fall
+    private bool isFalling;
     public bool grounded;
     public float fallDuration;
     public float fallX;
     public float fallY;
+    public float timeToFalling = 1;
     //Movement
     public float durationToSwipe = .1f;
     public string triggerToWalk = "Walk";
@@ -46,6 +55,13 @@ public class Player : Singleton<Player>
     //Animation Death
     public string triggerDeath = "Death";
     
+    public enum JumpStyle
+    {
+        Up,
+        Fall,
+        Land,
+        None
+    }
 
     // Start is called before the first frame update
     void Start()
@@ -120,7 +136,7 @@ public class Player : Singleton<Player>
 
     void Jump()
     {
-        if(Input.GetKeyDown(KeyCode.Space))
+        if(Input.GetKeyDown(KeyCode.Space) && grounded)
         {
             _rb.velocity = Vector2.up * jumpForce;
             grounded = false;
@@ -133,11 +149,13 @@ public class Player : Singleton<Player>
             _rb.transform.DOKill();
             
             JumpAnimation();
+            StartCoroutine(FallingAnimantion());
         }
     }
 
     void JumpAnimation()
     {
+        SwitchJumpStyle(JumpStyle.Up);
         if(direction)
         {
             _rb.transform.DOScaleX(jumpScaleX, jumpDuration/2).SetEase(easeOut).OnComplete(
@@ -166,13 +184,16 @@ public class Player : Singleton<Player>
     {
         if(collision.gameObject.CompareTag("Ground") && !grounded)
         {
-            Fall();
+            Land();
             grounded = true;
+            isFalling = false;
         }
     }
 
-    void Fall()
+    void Land()
     {
+        SwitchJumpStyle(JumpStyle.Land);
+
         _rb.transform.DOKill();
 
         if(direction)
@@ -202,27 +223,21 @@ public class Player : Singleton<Player>
 
     void Falling()
     {
-        if(!grounded)
+        if(!grounded && isFalling)
         {
-            StartCoroutine(FallingAnimation());
-        }
-        else
-        {
-            if(direction)
-            _rb.transform.localScale = new Vector2(1, 1);
-            else
-            _rb.transform.localScale = new Vector2(-1, 1);
-            StopAllCoroutines();
+            SwitchJumpStyle(JumpStyle.Fall);
         }
     }
-
-    IEnumerator FallingAnimation()
+    IEnumerator FallingAnimantion()
     {
-        yield return new WaitForSeconds(5);
-        if(direction)
-        _rb.transform.localScale = new Vector2(jumpScaleX, jumpScaleY);
-        else
-        _rb.transform.localScale = new Vector2(-jumpScaleX, -jumpScaleY);
+        yield return new WaitForSeconds(timeToFalling);
+        isFalling = true;
+    }
+
+    IEnumerator LandAnimation()
+    {
+        yield return new WaitForSeconds(timeToLand);
+        anim.SetBool(triggerLanding, false);
     }
 
     void HeartUI()
@@ -238,6 +253,15 @@ public class Player : Singleton<Player>
                 hearts[i].enabled = false;
             }
         }
+    }
+
+    void SwitchJumpStyle(JumpStyle newStyle)
+    {
+        currentJump = newStyle;
+        
+        if(newStyle == JumpStyle.Up) anim.SetTrigger(triggerJump);
+        if(newStyle == JumpStyle.Fall) anim.SetTrigger(triggerFall);
+        if(newStyle == JumpStyle.Land) anim.SetTrigger(triggerLanding);
     }
 
     public void DeadAnimation()

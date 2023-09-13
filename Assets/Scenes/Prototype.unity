@@ -1901,9 +1901,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9280a1525e86075459a9d8b2e612fc66, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rb: {fileID: 775284984}
-  ease: 1
+  _anim: {fileID: 0}
   damage: 1
+  triggerAttack: Attack
 --- !u!50 &775284984
 Rigidbody2D:
   serializedVersion: 4
@@ -3688,19 +3688,22 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   collisor: {fileID: 1133834977}
+  currentJump: 0
   friction: {x: 0.1, y: 0}
   speed: 5
   speedRun: 10
-  jumpForce: 15
+  jumpForce: 30
   anim: {fileID: 599471973}
   jumpDuration: 1
   jumpScaleY: 1.2
   jumpScaleX: 0.8
   easeOut: 27
-  grounded: 0
-  fallDuration: 0.2
+  timeToLand: 1
+  grounded: 1
+  fallDuration: 0.5
   fallX: 1.2
   fallY: 0.7
+  timeToFalling: 0.3
   durationToSwipe: 0.3
   triggerToWalk: Walk
   triggerToRun: Run
@@ -3709,7 +3712,7 @@ MonoBehaviour:
   - {fileID: 1149622286}
   - {fileID: 29767186}
   - {fileID: 202603446}
-  easeDie: 32
+  triggerDeath: Death
 --- !u!114 &1133834979
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3722,6 +3725,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 90ddadaf84814444a87f022f0df1b27d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _flashColor: {fileID: 0}
   currentLife: 0
   destroyOnKill: 1
   _isDead: 0
