@@ -52,6 +52,7 @@ MonoBehaviour:
   keyToShoot: 102
   timeBetweenShoot: 0.2
   triggerToShoot: Shooting
+  _isShooting: 0
 --- !u!1 &861798715
 GameObject:
   m_ObjectHideFlags: 0
@@ -986,6 +987,7 @@ GameObject:
   - component: {fileID: 8007466312498025151}
   - component: {fileID: 6413013834153556191}
   - component: {fileID: 7095203034941201980}
+  - component: {fileID: 2122455163}
   m_Layer: 0
   m_Name: PFB_Astronaut
   m_TagString: Untagged
@@ -1065,6 +1067,19 @@ MonoBehaviour:
   color: {r: 1, g: 0.4481132, b: 0.4481132, a: 1}
   duration: 0.1
   health: {fileID: 0}
+--- !u!114 &2122455163
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8835229685202505509}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d218820dec483b14abbd99e832630d6f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  player: {fileID: 0}
 --- !u!1001 &2987335437580250577
 PrefabInstance:
   m_ObjectHideFlags: 0
