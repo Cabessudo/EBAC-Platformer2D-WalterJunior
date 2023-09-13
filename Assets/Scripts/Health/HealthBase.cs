@@ -44,7 +44,18 @@ public class HealthBase : Singleton<HealthBase>
 
         if(destroyOnKill)
         {
-            Player.Instance.DeadAnimation();
+            var player = GetComponent<Player>();
+            if(player != null)
+            {
+                player.DeadAnimation();
+            }
+            
+            var enemy = GetComponent<EnemyBase>();
+            if(enemy != null)
+            {
+                enemy.DeadAnimation();
+            }
+            
             Destroy(gameObject, delayToDie);
         }
     }

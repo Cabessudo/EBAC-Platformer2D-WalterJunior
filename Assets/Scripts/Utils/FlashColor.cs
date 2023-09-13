@@ -11,9 +11,14 @@ public class FlashColor : MonoBehaviour
     public Color color = Color.red;
     public float duration = 0.1f;
     //Normal Color
+    public HealthBase health;
     private Color normalColor = Color.white;
     private Tween _currentTween;
-    
+
+    void Update()
+    {
+        Death();
+    }
 
     //Get The SpriteRenderer Of The Children In The Unity
     void OnValidate()
@@ -37,6 +42,15 @@ public class FlashColor : MonoBehaviour
         foreach(var s in spriteRenderers)
         {
             _currentTween = s.DOColor(color, duration).SetLoops(2, LoopType.Yoyo);
+        }
+    }
+
+    void Death()
+    {
+        if(health._isDead)
+        {
+            _currentTween.Kill();
+            spriteRenderers.ForEach(i => i.color = normalColor);
         }
     }
 }

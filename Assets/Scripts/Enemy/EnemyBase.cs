@@ -7,17 +7,18 @@ public class EnemyBase : MonoBehaviour
 {
 
     [Header("References")]
-    // public Rigidbody2D rb;
-    // public Ease ease;
+    public HealthBase enemyHealth;
+    public FlashColor enemyFlash;
     [SerializeField] Animator _anim;
 
     [Header("Damage")]
     public int damage = 1;
     public string triggerAttack = "Attack";
+    public string triggerDead = "Death";
 
     void Start()
     {
-        //rb.transform.DOMoveX(-3, 1).SetEase(ease).SetLoops(-1, LoopType.Yoyo);
+        
     }
 
     void OnCollisionEnter2D(Collision2D collision)
@@ -35,4 +36,15 @@ public class EnemyBase : MonoBehaviour
             }
         }
     }
+
+    public void DeadAnimation()
+    {
+        _anim.SetTrigger(triggerDead);
+    }
+
+    public void TakeDamage(int amount)
+    {
+        enemyHealth.Damage(amount);
+        enemyFlash.Flash();
+    } 
 }
