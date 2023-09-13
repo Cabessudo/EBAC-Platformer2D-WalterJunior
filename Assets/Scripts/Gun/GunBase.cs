@@ -13,15 +13,18 @@ public class GunBase : MonoBehaviour
     public KeyCode keyToShoot = KeyCode.F;
     public float timeBetweenShoot = .2f;
     public string triggerToShoot = "Shooting";
+    public bool _isShooting;
 
     void Update()
     {
         if(Input.GetKeyDown(keyToShoot))
         {
+            _isShooting = true;
             _currentCoroutine = StartCoroutine(ShootRotine());
         }        
         else if(Input.GetKeyUp(keyToShoot))
         {
+            _isShooting = false;
             _anim.SetBool(triggerToShoot, false);
             StopCoroutine(_currentCoroutine);
         }
@@ -36,7 +39,7 @@ public class GunBase : MonoBehaviour
 
     IEnumerator ShootRotine()
     {
-        while(true)
+        while(_isShooting)
         {
             Shoot();
             _anim.SetBool(triggerToShoot, true);
