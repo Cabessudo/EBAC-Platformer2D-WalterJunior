@@ -8,7 +8,7 @@ using UnityEngine.Video;
 using UnityEditor.Callbacks;
 using Ebac.Core.Singleton;
 
-public class Player : Singleton<Player>
+public class Player : MonoBehaviour
 {
 
     [Header("References")]
@@ -84,7 +84,6 @@ public class Player : Singleton<Player>
         _rb = GetComponent<Rigidbody2D>();
         _flatSpeed = speed;
         direction = true;
-        Instance = this;
     }
 
     // Update is called once per frame

@@ -4,10 +4,15 @@ using UnityEngine;
 
 public class FollowPlayer : MonoBehaviour
 {
+    private GameObject _player;
+    void Start()
+    {
+        _player = GameObject.FindGameObjectWithTag("Player");
+    }
     // Update is called once per frame
     void Update()
     {
-        if(Player.Instance != null)
-        transform.position = Player.Instance.transform.position;       
+        if(_player != null)
+        transform.position = _player.transform.position;       
     }
 }

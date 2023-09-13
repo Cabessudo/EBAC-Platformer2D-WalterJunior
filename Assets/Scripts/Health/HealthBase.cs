@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.PlayerLoop;
 using Ebac.Core.Singleton;
 
-public class HealthBase : Singleton<HealthBase>
+public class HealthBase : MonoBehaviour
 {
     public  Action OnKill;
     [SerializeField] FlashColor _flashColor;
