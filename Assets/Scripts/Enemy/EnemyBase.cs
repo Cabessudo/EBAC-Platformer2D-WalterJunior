@@ -7,6 +7,7 @@ public class EnemyBase : MonoBehaviour
 {
 
     [Header("References")]
+    public BoxCollider2D enemyCollider;
     public HealthBase enemyHealth;
     public FlashColor enemyFlash;
     [SerializeField] Animator _anim;
@@ -16,9 +17,18 @@ public class EnemyBase : MonoBehaviour
     public string triggerAttack = "Attack";
     public string triggerDead = "Death";
 
-    void Start()
+    void Awake()
     {
-        
+        if(enemyHealth != null)
+        {
+            enemyHealth.OnKill += OnEnemyDeath;
+        }
+    }
+
+    void OnEnemyDeath()
+    {
+        enemyHealth.OnKill -= OnEnemyDeath;
+        DeadAnimation();
     }
 
     void OnCollisionEnter2D(Collision2D collision)
@@ -40,6 +50,7 @@ public class EnemyBase : MonoBehaviour
     public void DeadAnimation()
     {
         _anim.SetTrigger(triggerDead);
+        enemyCollider.enabled = false;
     }
 
     public void TakeDamage(int amount)

@@ -51,7 +51,7 @@ MonoBehaviour:
   shootPos: {fileID: 861798716}
   keyToShoot: 102
   timeBetweenShoot: 0.2
-  triggerToShoot: Shoot
+  triggerToShoot: Shooting
 --- !u!1 &861798715
 GameObject:
   m_ObjectHideFlags: 0

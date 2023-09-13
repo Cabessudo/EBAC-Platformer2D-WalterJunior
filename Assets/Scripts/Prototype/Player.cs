@@ -13,6 +13,7 @@ public class Player : Singleton<Player>
 
     [Header("References")]
     private Rigidbody2D _rb;
+    public HealthBase playerHealth;
     public BoxCollider2D collisor;
     public JumpStyle currentJump;
 
@@ -63,6 +64,20 @@ public class Player : Singleton<Player>
         Land
     }
 
+    void Awake()
+    {
+        if(playerHealth != null)
+        {
+            playerHealth.OnKill += OnPlayerDeath;
+        }
+    }
+
+    void OnPlayerDeath()
+    {
+        playerHealth.OnKill -= OnPlayerDeath;
+        DeadAnimation();
+    }
+
     // Start is called before the first frame update
     void Start()
     {
@@ -77,7 +92,7 @@ public class Player : Singleton<Player>
     {
         HeartUI();
 
-        if(HealthBase.Instance._isDead)
+        if(playerHealth._isDead)
         {
             StopAllCoroutines();
             gameOver = true;
@@ -251,7 +266,7 @@ public class Player : Singleton<Player>
     {
         for(int i = 0; i < hearts.Length; i++)
         {
-            if(i < HealthBase.Instance.currentLife)
+            if(i < playerHealth.currentLife)
             {
                 hearts[i].enabled = true;
             }
@@ -275,11 +290,4 @@ public class Player : Singleton<Player>
     {
         anim.SetTrigger(triggerDeath);
     }
-
-    /*public void DeadAnimation()
-    {
-        collisor.enabled = false;
-        _rb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
-        _rb.transform.DORotate(new Vector3(0, 0, -360), HealthBase.Instance.delayToDie, RotateMode.FastBeyond360).SetEase(easeDie);
-    }*/
 }

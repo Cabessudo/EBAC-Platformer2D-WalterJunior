@@ -1,4 +1,5 @@
 using System.Collections;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.PlayerLoop;
@@ -6,6 +7,7 @@ using Ebac.Core.Singleton;
 
 public class HealthBase : Singleton<HealthBase>
 {
+    public  Action OnKill;
     [SerializeField] FlashColor _flashColor;
     private int _life = 3;
     public int currentLife;
@@ -16,7 +18,6 @@ public class HealthBase : Singleton<HealthBase>
     void Awake()
     {
         Init();
-        Instance = this;
     }
 
     void Init()
@@ -43,20 +44,10 @@ public class HealthBase : Singleton<HealthBase>
         _isDead = true;
 
         if(destroyOnKill)
-        {
-            var player = GetComponent<Player>();
-            if(player != null)
-            {
-                player.DeadAnimation();
-            }
-            
-            var enemy = GetComponent<EnemyBase>();
-            if(enemy != null)
-            {
-                enemy.DeadAnimation();
-            }
-            
+        {        
             Destroy(gameObject, delayToDie);
         }
+
+        OnKill.Invoke();
     }
 }
