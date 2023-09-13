@@ -51,6 +51,7 @@ public class Player : Singleton<Player>
     public bool direction;
 
     [Header("Live & Death")]
+    public bool gameOver;
     public Image[] hearts;
     //Animation Death
     public string triggerDeath = "Death";
@@ -59,8 +60,7 @@ public class Player : Singleton<Player>
     {
         Up,
         Fall,
-        Land,
-        None
+        Land
     }
 
     // Start is called before the first frame update
@@ -75,14 +75,21 @@ public class Player : Singleton<Player>
     // Update is called once per frame
     void Update()
     {
-        Falling();
         HeartUI();
 
-        if(HealthBase.Instance._isDead) return;
+        if(HealthBase.Instance._isDead)
+        {
+            StopAllCoroutines();
+            gameOver = true;
+        }
 
-        Jump();
-        Movement();
-        
+        if(!gameOver)
+        {          
+          Jump();
+          Movement();
+          Falling();
+        } 
+            
     }
 
     void Movement()
@@ -136,7 +143,7 @@ public class Player : Singleton<Player>
 
     void Jump()
     {
-        if(Input.GetKeyDown(KeyCode.Space) && grounded)
+        if(Input.GetKeyDown(KeyCode.Space) && grounded && !gameOver)
         {
             _rb.velocity = Vector2.up * jumpForce;
             grounded = false;
@@ -182,7 +189,7 @@ public class Player : Singleton<Player>
 
     public void OnCollisionEnter2D(Collision2D collision)
     {
-        if(collision.gameObject.CompareTag("Ground") && !grounded)
+        if(collision.gameObject.CompareTag("Ground") && !grounded && !gameOver)
         {
             Land();
             grounded = true;
@@ -223,7 +230,7 @@ public class Player : Singleton<Player>
 
     void Falling()
     {
-        if(!grounded && isFalling)
+        if(!grounded && isFalling && !gameOver)
         {
             SwitchJumpStyle(JumpStyle.Fall);
         }
