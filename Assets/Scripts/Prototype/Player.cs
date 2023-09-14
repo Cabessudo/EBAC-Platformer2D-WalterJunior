@@ -28,9 +28,9 @@ public class Player : MonoBehaviour
     [Header("Animation")]
     public Animator anim;
     //Jump Up
-    public float jumpDuration;
-    public float jumpScaleY = 1.5f;
-    public float jumpScaleX = 0.5f;
+    public SOFloat sojumpDuration;
+    public SOFloat sojumpScaleY;
+    public SOFloat sojumpScaleX;
     public Ease easeOut = Ease.OutBack;
     private string triggerJump = "JumpUp";
     //Jump Down
@@ -179,25 +179,25 @@ public class Player : MonoBehaviour
         SwitchJumpStyle(JumpStyle.Up);
         if(direction)
         {
-            _rb.transform.DOScaleX(jumpScaleX, jumpDuration/2).SetEase(easeOut).OnComplete(
+            _rb.transform.DOScaleX(sojumpScaleX.value, sojumpDuration.value / 2).SetEase(easeOut).OnComplete(
             delegate
             {
-                _rb.transform.DOScaleX(1, jumpDuration/2).SetEase(easeOut);
+                _rb.transform.DOScaleX(1, sojumpDuration.value / 2).SetEase(easeOut);
             });
         }    
         else
         {
-            _rb.transform.DOScaleX(-jumpScaleX, jumpDuration/2).SetEase(easeOut).OnComplete(
+            _rb.transform.DOScaleX(-sojumpScaleX.value, sojumpDuration.value/2).SetEase(easeOut).OnComplete(
             delegate
             {
-                _rb.transform.DOScaleX(-1, jumpDuration/2).SetEase(easeOut);
+                _rb.transform.DOScaleX(-1, sojumpDuration.value/2).SetEase(easeOut);
             });
         }
 
-        _rb.transform.DOScaleY(jumpScaleY, jumpDuration/2).SetEase(easeOut).OnComplete(
+        _rb.transform.DOScaleY(sojumpScaleY.value, sojumpDuration.value/2).SetEase(easeOut).OnComplete(
         delegate
         {
-            _rb.transform.DOScaleY(1, jumpDuration/2).SetEase(easeOut);
+            _rb.transform.DOScaleY(1, sojumpDuration.value/2).SetEase(easeOut);
         });
     }
 
