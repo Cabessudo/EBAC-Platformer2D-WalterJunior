@@ -5,7 +5,8 @@ using Ebac.Core.Singleton;
 
 public class ItemManager : Singleton<ItemManager>
 { 
-    public int coins;
+    public SOInt coins;
+    public SOUIIntUpdate SOUIIntUpdate;
 
     void Start()
     {
@@ -14,18 +15,18 @@ public class ItemManager : Singleton<ItemManager>
 
     void Restart()
     {
-        coins = 0;
+        coins.value = 0;
         UpdateUI();
     }
 
     public void AddCoins(int manager = 1)
     {
-        coins += manager;
+        coins.value += manager;
         UpdateUI();
     }
 
     void UpdateUI()
     {
-        UIManager.UpdateCoins(coins);
+        SOUIIntUpdate.UpdateValue();
     }
 }
