@@ -12,7 +12,7 @@ public class GameManager : Singleton<GameManager>
     [Header("References")]
     public GameObject gameOverText;
     private GameObject _player;
-    public TextMeshProUGUI coinText;
+    
 
     [Header("Variables")]
     public bool gameOver;
@@ -21,8 +21,7 @@ public class GameManager : Singleton<GameManager>
     void Update()
     {
         FindPlayer();
-        UpdateCoinText();
-
+        
         if(gameOver)
         ShowGameOver();
     }
@@ -44,11 +43,6 @@ public class GameManager : Singleton<GameManager>
     public void Restart()
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
-    }
-
-    public void UpdateCoinText()
-    {
-        coinText.SetText(ItemManager.Instance.coins + " x");
     }
 
     /*[Header("Player")]

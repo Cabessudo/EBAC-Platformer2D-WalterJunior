@@ -15,10 +15,17 @@ public class ItemManager : Singleton<ItemManager>
     void Restart()
     {
         coins = 0;
+        UpdateUI();
     }
 
     public void AddCoins(int manager = 1)
     {
         coins += manager;
+        UpdateUI();
+    }
+
+    void UpdateUI()
+    {
+        UIManager.UpdateCoins(coins);
     }
 }
