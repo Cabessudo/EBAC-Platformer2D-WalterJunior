@@ -43,6 +43,9 @@ public class EnemyBase : MonoBehaviour
             if(health != null)
             {
                 health.Damage(damage);
+
+                if(health._isDead)
+                enemyFlash.Death();
             }
         }
     }

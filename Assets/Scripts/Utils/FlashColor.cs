@@ -15,11 +15,6 @@ public class FlashColor : MonoBehaviour
     private Color normalColor = Color.white;
     private Tween _currentTween;
 
-    void Update()
-    {
-        Death();
-    }
-
     //Get The SpriteRenderer Of The Children In The Unity
     void OnValidate()
     {
@@ -45,7 +40,7 @@ public class FlashColor : MonoBehaviour
         }
     }
 
-    void Death()
+    public void Death()
     {
         if(health._isDead)
         {
