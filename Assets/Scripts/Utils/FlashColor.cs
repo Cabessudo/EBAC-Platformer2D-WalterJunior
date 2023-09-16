@@ -11,7 +11,7 @@ public class FlashColor : MonoBehaviour
     public Color color = Color.red;
     public float duration = 0.1f;
     //Normal Color
-    public HealthBase health;
+    public SO_Health soHealth;
     private Color normalColor = Color.white;
     private Tween _currentTween;
 
@@ -42,7 +42,7 @@ public class FlashColor : MonoBehaviour
 
     public void Death()
     {
-        if(health._isDead)
+        if(soHealth._isDead)
         {
             _currentTween.Kill();
             spriteRenderers.ForEach(i => i.color = normalColor);

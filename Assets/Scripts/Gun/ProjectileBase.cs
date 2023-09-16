@@ -24,10 +24,10 @@ public class ProjectileBase : MonoBehaviour
         var enemy = other.gameObject.GetComponent<EnemyBase>();
         var enemyHealth = other.gameObject.GetComponent<HealthBase>();
 
-        if(enemy != null && !enemyHealth._isDead)
+        if(enemy != null && !enemyHealth.soHealth._isDead)
         {
             enemy.TakeDamage(projectileDamage);
-            Destroy(gameObject);
+            gameObject.SetActive(false);
         }
     }
 }

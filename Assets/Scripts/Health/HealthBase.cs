@@ -7,13 +7,10 @@ using Ebac.Core.Singleton;
 
 public class HealthBase : MonoBehaviour
 {
-    public  Action OnKill;
-    [SerializeField] FlashColor _flashColor;
-    private int _life = 3;
-    public int currentLife;
-    public bool destroyOnKill;
-    public bool _isDead = false;
-    public float delayToDie = 1;
+    public Action OnKill; // IMPORTANT TO REMEMBER
+    public FlashColor flashColor;
+    [Header("Health Setup")]
+    public SO_Health soHealth;
 
     void Awake()
     {
@@ -22,18 +19,23 @@ public class HealthBase : MonoBehaviour
 
     void Init()
     {
-        currentLife = _life;
-        _isDead = false;
+        soHealth.currentLife = soHealth._life;
+        soHealth._isDead = false;
     }
 
-    public void Damage(int damage)
+    void Start()
     {
-        if(_isDead) return;
+        flashColor = GetComponentInChildren<FlashColor>();
+    }
 
-        currentLife -= damage;
-        _flashColor.Flash();
+    public virtual void Damage(int damage)
+    {
+        if(soHealth._isDead) return;
 
-        if(currentLife <= 0)
+        soHealth.currentLife -= damage;
+        flashColor.Flash();
+
+        if(soHealth.currentLife <= 0)
         {
             Kill();
         }
@@ -41,11 +43,11 @@ public class HealthBase : MonoBehaviour
 
     void Kill()
     {
-        _isDead = true;
+        soHealth._isDead = true;
 
-        if(destroyOnKill)
+        if(soHealth.destroyOnKill)
         {        
-            Destroy(gameObject, delayToDie);
+            Destroy(gameObject, soHealth.delayToDie);
         }
 
         OnKill.Invoke();

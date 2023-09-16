@@ -12,50 +12,14 @@ public class Player : MonoBehaviour
 {
 
     [Header("References")]
+    public Animator currentPlayer;
     private Rigidbody2D _rb;
-    public HealthBase playerHealth;
+    public HealthPlayer playerHealth;
     public BoxCollider2D collisor;
     public JumpStyle currentJump;
 
-    [Header("Movement")]
-    private Vector2 velocity;
-    public Vector2 friction = new Vector2(.1f, 0);
-    public float speed;
-    private float _flatSpeed;
-    public float speedRun;
-    public float jumpForce;
-
-    [Header("Animation")]
-    public Animator anim;
-    //Jump Up
-    public SOFloat sojumpDuration;
-    public SOFloat sojumpScaleY;
-    public SOFloat sojumpScaleX;
-    public Ease easeOut = Ease.OutBack;
-    private string triggerJump = "JumpUp";
-    //Jump Down
-    private string triggerFall = "JumpDown";
-    //Jump Landing
-    private string triggerLanding = "JumpLanding";
-    public float timeToLand = 1;
-    //Fall
-    private bool isFalling;
-    public bool grounded;
-    public float fallDuration;
-    public float fallX;
-    public float fallY;
-    public float timeToFalling = 1;
-    //Movement
-    public float durationToSwipe = .1f;
-    public string triggerToWalk = "Walk";
-    public string triggerToRun = "Run";
-    public bool direction;
-
-    [Header("Live & Death")]
-    public bool gameOver;
-    public Image[] hearts;
-    //Animation Death
-    public string triggerDeath = "Death";
+    [Header("Player Setup")]
+    public SOPlayerSetup soPlayerSetup;
     
     public enum JumpStyle
     {
@@ -70,6 +34,8 @@ public class Player : MonoBehaviour
         {
             playerHealth.OnKill += OnPlayerDeath;
         }
+
+        currentPlayer = Instantiate(soPlayerSetup.anim, transform);
     }
 
     void OnPlayerDeath()
@@ -81,23 +47,29 @@ public class Player : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        Init();
+    }
+
+    void Init()
+    {
         _rb = GetComponent<Rigidbody2D>();
-        _flatSpeed = speed;
-        direction = true;
+        soPlayerSetup.gameOver = false;
+        soPlayerSetup.direction = true;
+        soPlayerSetup.isFalling = false;
+        soPlayerSetup.grounded = true;
     }
 
     // Update is called once per frame
     void Update()
     {
-        HeartUI();
 
-        if(playerHealth._isDead)
+        if(playerHealth.soHealth._isDead)
         {
             StopAllCoroutines();
-            gameOver = true;
+            soPlayerSetup.gameOver = true;
         }
 
-        if(!gameOver)
+        if(!soPlayerSetup.gameOver)
         {          
           Jump();
           Movement();
@@ -110,59 +82,59 @@ public class Player : MonoBehaviour
     {
         if(Input.GetKey(KeyCode.D))
         {
-            _rb.velocity = new Vector2(speed, _rb.velocity.y);
-            direction = true;
-            anim.SetBool(triggerToWalk, true);
+            _rb.velocity = new Vector2(soPlayerSetup.speed, _rb.velocity.y);
+            soPlayerSetup.direction = true;
+            currentPlayer.SetBool(soPlayerSetup.triggerToWalk, true);
         }
         else if(Input.GetKey(KeyCode.A))
         {
-            _rb.velocity = new Vector2(-speed, _rb.velocity.y);
-            direction = false;
-            anim.SetBool(triggerToWalk, true);
+            _rb.velocity = new Vector2(-soPlayerSetup.speed, _rb.velocity.y);
+            soPlayerSetup.direction = false;
+            currentPlayer.SetBool(soPlayerSetup.triggerToWalk, true);
         }
         else
         {
-            anim.SetBool(triggerToWalk, false);
-            anim.SetBool(triggerToRun, false);
+            currentPlayer.SetBool(soPlayerSetup.triggerToWalk, false);
+            currentPlayer.SetBool(soPlayerSetup.triggerToRun, false);
         }
 
         //Change Direction
-        if(direction)
-        _rb.transform.DOScaleX(1, durationToSwipe);
+        if(soPlayerSetup.direction)
+        _rb.transform.DOScaleX(1, soPlayerSetup.durationToSwipe);
         else
-        _rb.transform.DOScaleX(-1, durationToSwipe);
+        _rb.transform.DOScaleX(-1, soPlayerSetup.durationToSwipe);
         
         //Run
         if(Input.GetKey(KeyCode.LeftShift))
         {
-            anim.SetBool(triggerToRun, true);
-            speed = speedRun;
+            currentPlayer.SetBool(soPlayerSetup.triggerToRun, true);
+            soPlayerSetup.speed = soPlayerSetup.speedRun;
         }
         else
         {
-            anim.SetBool(triggerToRun, false);
-            speed = _flatSpeed;
+            currentPlayer.SetBool(soPlayerSetup.triggerToRun, false);
+            soPlayerSetup.speed = soPlayerSetup.flatSpeed;
         }
 
         //Friction
         if(_rb.velocity.x > 0)
         {
-            _rb.velocity -= friction;            
+            _rb.velocity -= soPlayerSetup.friction;            
         }
         else if(_rb.velocity.x < 0)
         {
-            _rb.velocity += friction;
+            _rb.velocity += soPlayerSetup.friction;
         }
     }
 
     void Jump()
     {
-        if(Input.GetKeyDown(KeyCode.Space) && grounded && !gameOver)
+        if(Input.GetKeyDown(KeyCode.Space) && soPlayerSetup.grounded && !soPlayerSetup.gameOver)
         {
-            _rb.velocity = Vector2.up * jumpForce;
-            grounded = false;
+            _rb.velocity = Vector2.up * soPlayerSetup.jumpForce;
+            soPlayerSetup.grounded = false;
 
-            if(direction)
+            if(soPlayerSetup.direction)
             _rb.transform.localScale = Vector2.one;
             else
             _rb.transform.localScale = new Vector2(-1, 1);
@@ -177,37 +149,37 @@ public class Player : MonoBehaviour
     void JumpAnimation()
     {
         SwitchJumpStyle(JumpStyle.Up);
-        if(direction)
+        if(soPlayerSetup.direction)
         {
-            _rb.transform.DOScaleX(sojumpScaleX.value, sojumpDuration.value / 2).SetEase(easeOut).OnComplete(
+            _rb.transform.DOScaleX(soPlayerSetup.jumpScaleX, soPlayerSetup.jumpDuration / 2).SetEase(soPlayerSetup.easeOut).OnComplete(
             delegate
             {
-                _rb.transform.DOScaleX(1, sojumpDuration.value / 2).SetEase(easeOut);
+                _rb.transform.DOScaleX(1, soPlayerSetup.jumpDuration / 2).SetEase(soPlayerSetup.easeOut);
             });
         }    
         else
         {
-            _rb.transform.DOScaleX(-sojumpScaleX.value, sojumpDuration.value/2).SetEase(easeOut).OnComplete(
+            _rb.transform.DOScaleX(-soPlayerSetup.jumpScaleX, soPlayerSetup.jumpDuration/2).SetEase(soPlayerSetup.easeOut).OnComplete(
             delegate
             {
-                _rb.transform.DOScaleX(-1, sojumpDuration.value/2).SetEase(easeOut);
+                _rb.transform.DOScaleX(-1, soPlayerSetup.jumpDuration/2).SetEase(soPlayerSetup.easeOut);
             });
         }
 
-        _rb.transform.DOScaleY(sojumpScaleY.value, sojumpDuration.value/2).SetEase(easeOut).OnComplete(
+        _rb.transform.DOScaleY(soPlayerSetup.jumpScaleY, soPlayerSetup.jumpDuration/2).SetEase(soPlayerSetup.easeOut).OnComplete(
         delegate
         {
-            _rb.transform.DOScaleY(1, sojumpDuration.value/2).SetEase(easeOut);
+            _rb.transform.DOScaleY(1, soPlayerSetup.jumpDuration/2).SetEase(soPlayerSetup.easeOut);
         });
     }
 
     public void OnCollisionEnter2D(Collision2D collision)
     {
-        if(collision.gameObject.CompareTag("Ground") && !grounded && !gameOver)
+        if(collision.gameObject.CompareTag("Ground") && !soPlayerSetup.grounded && !soPlayerSetup.gameOver)
         {
             Land();
-            grounded = true;
-            isFalling = false;
+            soPlayerSetup.grounded = true;
+            soPlayerSetup.isFalling = false;
         }
     }
 
@@ -217,76 +189,61 @@ public class Player : MonoBehaviour
 
         _rb.transform.DOKill();
 
-        if(direction)
+        if(soPlayerSetup.direction)
         {
-            _rb.transform.DOScaleX(fallX, fallDuration/2).SetEase(easeOut).OnComplete(
+            _rb.transform.DOScaleX(soPlayerSetup.fallX, soPlayerSetup.fallDuration/2).SetEase(soPlayerSetup.easeOut).OnComplete(
             delegate
             {
-                _rb.transform.DOScaleX(1, fallDuration/2).SetEase(easeOut);
+                _rb.transform.DOScaleX(1, soPlayerSetup.fallDuration/2).SetEase(soPlayerSetup.easeOut);
             });
         }
 
-        if(!direction)
+        if(!soPlayerSetup.direction)
         {
-            _rb.transform.DOScaleX(-fallX, fallDuration/2).SetEase(easeOut).OnComplete(
+            _rb.transform.DOScaleX(-soPlayerSetup.fallX, soPlayerSetup.fallDuration/2).SetEase(soPlayerSetup.easeOut).OnComplete(
                 delegate
                 {
-                    _rb.transform.DOScaleX(-1, fallDuration/2).SetEase(easeOut);
+                    _rb.transform.DOScaleX(-1, soPlayerSetup.fallDuration/2).SetEase(soPlayerSetup.easeOut);
                 });
         }
 
-        _rb.transform.DOScaleY(fallY, fallDuration/2).SetEase(easeOut).OnComplete(
+        _rb.transform.DOScaleY(soPlayerSetup.fallY, soPlayerSetup.fallDuration/2).SetEase(soPlayerSetup.easeOut).OnComplete(
             delegate
             {
-                _rb.transform.DOScaleY(1, fallDuration/2).SetEase(easeOut);
+                _rb.transform.DOScaleY(1, soPlayerSetup.fallDuration/2).SetEase(soPlayerSetup.easeOut);
             });
     }
 
     void Falling()
     {
-        if(!grounded && isFalling && !gameOver)
+        if(!soPlayerSetup.grounded && soPlayerSetup.isFalling && !soPlayerSetup.gameOver)
         {
             SwitchJumpStyle(JumpStyle.Fall);
         }
     }
     IEnumerator FallingAnimantion()
     {
-        yield return new WaitForSeconds(timeToFalling);
-        isFalling = true;
+        yield return new WaitForSeconds(soPlayerSetup.timeToFalling);
+        soPlayerSetup.isFalling = true;
     }
 
     IEnumerator LandAnimation()
     {
-        yield return new WaitForSeconds(timeToLand);
-        anim.SetBool(triggerLanding, false);
-    }
-
-    void HeartUI()
-    {
-        for(int i = 0; i < hearts.Length; i++)
-        {
-            if(i < playerHealth.currentLife)
-            {
-                hearts[i].enabled = true;
-            }
-            else
-            {
-                hearts[i].enabled = false;
-            }
-        }
+        yield return new WaitForSeconds(soPlayerSetup.timeToLand);
+        currentPlayer.SetBool(soPlayerSetup.triggerLanding, false);
     }
 
     void SwitchJumpStyle(JumpStyle newStyle)
     {
         currentJump = newStyle;
         
-        if(newStyle == JumpStyle.Up) anim.SetTrigger(triggerJump);
-        if(newStyle == JumpStyle.Fall) anim.SetTrigger(triggerFall);
-        if(newStyle == JumpStyle.Land) anim.SetTrigger(triggerLanding);
+        if(newStyle == JumpStyle.Up) currentPlayer.SetTrigger(soPlayerSetup.triggerJump);
+        if(newStyle == JumpStyle.Fall) currentPlayer.SetTrigger(soPlayerSetup.triggerFall);
+        if(newStyle == JumpStyle.Land) currentPlayer.SetTrigger(soPlayerSetup.triggerLanding);
     }
 
     public void DeadAnimation()
     {
-        anim.SetTrigger(triggerDeath);
+        currentPlayer.SetTrigger(soPlayerSetup.triggerDeath);
     }
 }

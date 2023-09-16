@@ -9,7 +9,7 @@ public class EnemyBase : MonoBehaviour
     [Header("References")]
     public BoxCollider2D enemyCollider;
     public HealthBase enemyHealth;
-    public FlashColor enemyFlash;
+    public SO_Health soEnemyHealth;
     [SerializeField] Animator _anim;
 
     [Header("Damage")]
@@ -44,8 +44,8 @@ public class EnemyBase : MonoBehaviour
             {
                 health.Damage(damage);
 
-                if(health._isDead)
-                enemyFlash.Death();
+                if(health.soHealth._isDead)
+                enemyHealth.flashColor.Death();
             }
         }
     }
@@ -59,6 +59,6 @@ public class EnemyBase : MonoBehaviour
     public void TakeDamage(int amount)
     {
         enemyHealth.Damage(amount);
-        enemyFlash.Flash();
+        enemyHealth.flashColor.Flash();
     } 
 }

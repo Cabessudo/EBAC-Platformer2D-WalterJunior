@@ -7,13 +7,18 @@ public class GunBase : MonoBehaviour
 
     [SerializeField] Animator _anim;
     public ProjectileBase PFB_projectile;
-    public Transform playerDirection;
+    private GameObject _playerDirection;
     public Transform shootPos;
     private Coroutine _currentCoroutine;
     public KeyCode keyToShoot = KeyCode.F;
     public float timeBetweenShoot = .2f;
     public string triggerToShoot = "Shooting";
     public bool _isShooting;
+
+    void Start()
+    {
+        _playerDirection = GameObject.FindGameObjectWithTag("Player");
+    }
 
     void Update()
     {
@@ -34,7 +39,7 @@ public class GunBase : MonoBehaviour
     {
         var projectile = Instantiate(PFB_projectile);
         projectile.transform.position = shootPos.position;
-        projectile.side = playerDirection.transform.localScale.x;
+        projectile.side = _playerDirection.transform.localScale.x;
     }
 
     IEnumerator ShootRotine()

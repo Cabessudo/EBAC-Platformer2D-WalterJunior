@@ -2,10 +2,15 @@ using UnityEngine;
 
 public class PlayerDestroyHelper : MonoBehaviour
 {
-    public Player player;
+    private GameObject _player;
+
+    void Start()
+    {
+        _player = GameObject.FindGameObjectWithTag("Player");
+    }
 
     public void DestroyPlayer()
     {
-        Destroy(player.gameObject);
+        Destroy(_player);
     }
 }
