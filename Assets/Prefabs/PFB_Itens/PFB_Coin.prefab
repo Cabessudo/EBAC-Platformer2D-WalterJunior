@@ -101,6 +101,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   PFB_collected: {fileID: 7608119972905679047}
+  graphicItem: {fileID: 3278804868264485786}
+  PFB_particleSystem: {fileID: 1838023729288530044, guid: 2b9f2e1440047054a990fe301c363bc1, type: 3}
+  durationToHide: 3
   coinSprite: {fileID: 3278804868264485786}
   ease: 1
 --- !u!58 &7350189702442415001

@@ -5,7 +5,6 @@ using DG.Tweening;
 
 public class ItemCollatablesCoin : ItemCollatablesBase
 {
-    public GameObject PFB_collected;
     public SpriteRenderer coinSprite;
     public Ease ease = Ease.Linear;
 
@@ -18,9 +17,10 @@ public class ItemCollatablesCoin : ItemCollatablesBase
     {
         base.OnCollect();
         ItemManager.Instance.AddCoins();
-        coinSprite.enabled = false;
-        PFB_collected.SetActive(true);
-        Destroy(gameObject, .3f);
+        // coinSprite.enabled = false;
+        // PFB_collected.SetActive(true);
+        // Instantiate(PS_Coin, transform.position, PS_Coin.transform.rotation);
+        // Destroy(gameObject, .3f);
     }
 
     void Animation()
