@@ -17,7 +17,6 @@ public class Player : MonoBehaviour
     public HealthPlayer playerHealth;
     public BoxCollider2D collisor;
     public ParticleSystem PS_dust;
-    public ParticleSystem PS_jump;
     public JumpStyle currentJump;
 
     [Header("Player Setup")]
@@ -151,7 +150,7 @@ public class Player : MonoBehaviour
     {
         if(Input.GetKeyDown(KeyCode.Space) && soPlayerSetup.grounded && !soPlayerSetup.gameOver && GroundCheck())
         {
-            PS_jump.Play();
+            VFXManager.Instance.PlayVFXByType(VFXManager.VFXType.Jump, transform.position);
             _rb.velocity = Vector2.up * soPlayerSetup.jumpForce;
             soPlayerSetup.grounded = false;
 
@@ -206,7 +205,7 @@ public class Player : MonoBehaviour
 
     void Land()
     {
-        PS_jump.Play();
+        VFXManager.Instance.PlayVFXByType(VFXManager.VFXType.Jump, transform.position);
         SwitchJumpStyle(JumpStyle.Land);
 
         _rb.transform.DOKill();
