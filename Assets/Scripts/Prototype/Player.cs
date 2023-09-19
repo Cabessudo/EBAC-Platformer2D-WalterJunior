@@ -16,10 +16,16 @@ public class Player : MonoBehaviour
     private Rigidbody2D _rb;
     public HealthPlayer playerHealth;
     public BoxCollider2D collisor;
+    public ParticleSystem PS_dust;
+    public ParticleSystem PS_jump;
     public JumpStyle currentJump;
 
     [Header("Player Setup")]
     public SOPlayerSetup soPlayerSetup;
+
+    [Header("Jump Setup Check")]
+    public float distToGround;
+    public float spaceToGround = .1f;
     
     public enum JumpStyle
     {
@@ -36,6 +42,17 @@ public class Player : MonoBehaviour
         }
 
         currentPlayer = Instantiate(soPlayerSetup.anim, transform);
+
+        if(collisor != null)
+        {
+            distToGround = collisor.bounds.extents.y;
+        }
+    }
+
+    private bool GroundCheck()
+    {
+        Debug.DrawLine(transform.position, Vector2.down, Color.red, distToGround + spaceToGround);
+        return Physics2D.Raycast(transform.position, Vector2.down, distToGround + spaceToGround);
     }
 
     void OnPlayerDeath()
@@ -85,17 +102,20 @@ public class Player : MonoBehaviour
             _rb.velocity = new Vector2(soPlayerSetup.speed, _rb.velocity.y);
             soPlayerSetup.direction = true;
             currentPlayer.SetBool(soPlayerSetup.triggerToWalk, true);
+            PS_dust.Play();
         }
         else if(Input.GetKey(KeyCode.A))
         {
             _rb.velocity = new Vector2(-soPlayerSetup.speed, _rb.velocity.y);
             soPlayerSetup.direction = false;
             currentPlayer.SetBool(soPlayerSetup.triggerToWalk, true);
+            PS_dust.Play();
         }
         else
         {
             currentPlayer.SetBool(soPlayerSetup.triggerToWalk, false);
             currentPlayer.SetBool(soPlayerSetup.triggerToRun, false);
+            PS_dust.Stop();
         }
 
         //Change Direction
@@ -129,8 +149,9 @@ public class Player : MonoBehaviour
 
     void Jump()
     {
-        if(Input.GetKeyDown(KeyCode.Space) && soPlayerSetup.grounded && !soPlayerSetup.gameOver)
+        if(Input.GetKeyDown(KeyCode.Space) && soPlayerSetup.grounded && !soPlayerSetup.gameOver && GroundCheck())
         {
+            PS_jump.Play();
             _rb.velocity = Vector2.up * soPlayerSetup.jumpForce;
             soPlayerSetup.grounded = false;
 
@@ -185,6 +206,7 @@ public class Player : MonoBehaviour
 
     void Land()
     {
+        PS_jump.Play();
         SwitchJumpStyle(JumpStyle.Land);
 
         _rb.transform.DOKill();
