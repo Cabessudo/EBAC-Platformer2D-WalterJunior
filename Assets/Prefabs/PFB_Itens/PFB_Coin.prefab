@@ -16,7 +16,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &79147051401784856
 Transform:
   m_ObjectHideFlags: 0
@@ -233,8 +233,7 @@ MonoBehaviour:
   graphicItem: {fileID: 3278804868264485786}
   PFB_particleSystem: {fileID: 1838023729288530044, guid: 2b9f2e1440047054a990fe301c363bc1, type: 3}
   durationToHide: 3
-  audioSource: {fileID: 690355989103686791}
-  coinSprite: {fileID: 3278804868264485786}
+  audioSource: {fileID: 0}
   ease: 1
 --- !u!58 &7350189702442415001
 CircleCollider2D:

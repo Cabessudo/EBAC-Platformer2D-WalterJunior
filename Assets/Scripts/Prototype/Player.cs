@@ -101,20 +101,18 @@ public class Player : MonoBehaviour
             _rb.velocity = new Vector2(soPlayerSetup.speed, _rb.velocity.y);
             soPlayerSetup.direction = true;
             currentPlayer.SetBool(soPlayerSetup.triggerToWalk, true);
-            PS_dust.Play();
         }
         else if(Input.GetKey(KeyCode.A))
         {
             _rb.velocity = new Vector2(-soPlayerSetup.speed, _rb.velocity.y);
             soPlayerSetup.direction = false;
             currentPlayer.SetBool(soPlayerSetup.triggerToWalk, true);
-            PS_dust.Play();
         }
         else
         {
             currentPlayer.SetBool(soPlayerSetup.triggerToWalk, false);
             currentPlayer.SetBool(soPlayerSetup.triggerToRun, false);
-            PS_dust.Stop();
+            // PS_dust.Play();
         }
 
         //Change Direction
@@ -151,6 +149,7 @@ public class Player : MonoBehaviour
         if(Input.GetKeyDown(KeyCode.Space) && soPlayerSetup.grounded && !soPlayerSetup.gameOver && GroundCheck())
         {
             VFXManager.Instance.PlayVFXByType(VFXManager.VFXType.Jump, transform.position);
+            PS_dust.Stop();
             _rb.velocity = Vector2.up * soPlayerSetup.jumpForce;
             soPlayerSetup.grounded = false;
 
@@ -197,6 +196,7 @@ public class Player : MonoBehaviour
     {
         if(collision.gameObject.CompareTag("Ground") && !soPlayerSetup.grounded && !soPlayerSetup.gameOver)
         {
+            PS_dust.Play();
             Land();
             soPlayerSetup.grounded = true;
             soPlayerSetup.isFalling = false;
