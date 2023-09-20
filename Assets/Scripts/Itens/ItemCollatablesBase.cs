@@ -9,6 +9,9 @@ public class ItemCollatablesBase : MonoBehaviour
     public ParticleSystem PFB_particleSystem;
     protected bool _chanceToCollect = true; 
     public float durationToHide = 1;
+    
+    [Header("Sounds")]
+    public AudioSource audioSource;
 
     void OnTriggerEnter2D(Collider2D other)
     {
@@ -31,6 +34,7 @@ public class ItemCollatablesBase : MonoBehaviour
     {
         if(PFB_collected != null) PFB_collected.SetActive(true);
         if(PFB_particleSystem != null) Instantiate(PFB_particleSystem, transform.position, PFB_particleSystem.transform.rotation);
+        if(audioSource != null) audioSource.Play();
         Destroy(gameObject, .3f);
     }
 }
