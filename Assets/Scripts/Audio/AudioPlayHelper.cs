@@ -15,4 +15,9 @@ public class AudioPlayHelper : MonoBehaviour
             audioSource.Play();
         }
     }
+
+    public void Play()
+    {
+        audioSource.Play();
+    }
 }
