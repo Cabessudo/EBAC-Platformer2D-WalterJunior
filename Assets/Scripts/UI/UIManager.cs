@@ -3,13 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using Ebac.Core.Singleton;
 using TMPro;
-//NÃO USA MAIS
-public class UIManager : Singleton<UIManager>
-{
-    public TextMeshProUGUI coinText;
 
-    public static void UpdateCoins(int coin)
-    {
-        Instance.coinText.SetText(coin + " x");
-    }
+public class UIManager : MonoBehaviour
+{
+    
 }
