@@ -15,9 +15,10 @@ MonoBehaviour:
   friction: {x: 0.1, y: 0}
   flatSpeed: 5
   speedRun: 10
-  speed: 0
+  speed: 5
   jumpForce: 30
   anim: {fileID: 6539771916021965716, guid: 95cd55aeef856eb429bea9cda026a61d, type: 3}
+  cutScene: 0
   jumpDuration: 1
   jumpScaleY: 1.2
   jumpScaleX: 0.8
@@ -36,5 +37,7 @@ MonoBehaviour:
   triggerToWalk: Walk
   triggerToRun: Run
   direction: 1
+  triggerToAwake: Awake
+  cutSceneDuration: 7.23
   gameOver: 0
   triggerDeath: Death

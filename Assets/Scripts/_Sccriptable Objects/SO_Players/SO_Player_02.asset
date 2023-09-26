@@ -18,6 +18,7 @@ MonoBehaviour:
   speed: 3
   jumpForce: 20
   anim: {fileID: 6539771916021965716, guid: aac78a5a2eb2eb24093717a99874e739, type: 3}
+  cutScene: 0
   jumpDuration: 1
   jumpScaleY: 1.2
   jumpScaleX: 0.8
@@ -36,5 +37,7 @@ MonoBehaviour:
   triggerToWalk: Walk
   triggerToRun: Run
   direction: 1
+  triggerToAwake: Awake
+  cutSceneDuration: 7.23
   gameOver: 0
   triggerDeath: Death
