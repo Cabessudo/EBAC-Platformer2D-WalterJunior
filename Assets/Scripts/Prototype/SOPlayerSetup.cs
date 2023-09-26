@@ -15,6 +15,7 @@ public class SOPlayerSetup : ScriptableObject
 
     [Header("Animation")]
     public Animator anim;
+    public bool cutScene;
     //Jump Up
     public float jumpDuration = 1;
     public float jumpScaleY = 1.2f;
@@ -38,6 +39,9 @@ public class SOPlayerSetup : ScriptableObject
     public string triggerToWalk = "Walk";
     public string triggerToRun = "Run";
     public bool direction;
+    //Scene Start/Awake
+    public string triggerToAwake = "Awake";
+    public float cutSceneDuration;
 
     [Header("Live & Death")]
     public bool gameOver;

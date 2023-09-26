@@ -4520,6 +4520,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   currentPlayer: {fileID: 6539771916021965716, guid: aac78a5a2eb2eb24093717a99874e739, type: 3}
   playerHealth: {fileID: 1133834981}
+  pauseUI: {fileID: 590849952}
   collisor: {fileID: 1133834977}
   PS_dust: {fileID: 2079206995196463299}
   currentJump: 0

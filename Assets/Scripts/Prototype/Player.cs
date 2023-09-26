@@ -73,11 +73,13 @@ public class Player : MonoBehaviour
         soPlayerSetup.direction = true;
         soPlayerSetup.isFalling = false;
         soPlayerSetup.grounded = true;
+        StartCoroutine(AwakeAnim());
     }
 
     // Update is called once per frame
     void Update()
     {
+        if(soPlayerSetup.cutScene) return;
 
         if(playerHealth.soHealth._isDead)
         {
@@ -112,7 +114,6 @@ public class Player : MonoBehaviour
         {
             currentPlayer.SetBool(soPlayerSetup.triggerToWalk, false);
             currentPlayer.SetBool(soPlayerSetup.triggerToRun, false);
-            // PS_dust.Play();
         }
 
         //Change Direction
@@ -262,6 +263,15 @@ public class Player : MonoBehaviour
         if(newStyle == JumpStyle.Fall) currentPlayer.SetTrigger(soPlayerSetup.triggerFall);
         if(newStyle == JumpStyle.Land) currentPlayer.SetTrigger(soPlayerSetup.triggerLanding);
     }
+
+    IEnumerator AwakeAnim()
+    {
+        soPlayerSetup.cutScene = true;
+        soPlayerSetup.anim.SetTrigger(soPlayerSetup.triggerToAwake);
+        yield return new WaitForSeconds(soPlayerSetup.cutSceneDuration);
+        soPlayerSetup.cutScene = false;
+    }
+
 
     public void DeadAnimation()
     {
