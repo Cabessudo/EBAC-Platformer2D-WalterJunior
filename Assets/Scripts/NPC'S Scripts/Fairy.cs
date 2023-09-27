@@ -5,13 +5,18 @@ using DG.Tweening;
 
 public class Fairy : MonoBehaviour
 {
-    
-    private Tween _yTween;
-    private Tween _xTween;
+
+    [Header("References")]
+    public Player player;
+    public GameObject fairyBody;
+    private GameObject _currentFairy;
+    public Transform awakePos;
+    public Ease awakeEase;
     public Ease xEase;
     public Ease yEase;
-    public bool detectedPlayer;
     public bool startMove;
+    public bool isActive = false;
+    public bool detectedPlayer = false;
     
 
     [Header("Move Parameters")]
@@ -26,12 +31,14 @@ public class Fairy : MonoBehaviour
     public float startDuration = 1;
     public float normalDuration = 1;
     public float startFinalDuration = 8;
+    public float awakeDuration;
     
 
     //Dealaies
     public float startDelay;
     public float stopDelay;
     public float finalDelay;
+    public float awakeDelay;
 
     // Start is called before the first frame update
     void Start()
@@ -45,12 +52,22 @@ public class Fairy : MonoBehaviour
     {
         if(!startMove)
         Stop();
+        else 
+        FinalStop();
+
+        AwakeFairy();
+    }
+
+    #region Animation
+    void YMove()
+    {
+        transform.DOMoveY(yMoveUp, yDuration).SetLoops(-1, LoopType.Yoyo).SetEase(yEase);
     }
 
     void StartAnim()
     {
         transform.DOMoveX(xStartAnim, startDuration).SetLoops(-1, LoopType.Yoyo).SetEase(xEase).SetDelay(startDelay);
-        _yTween = transform.DOMoveY(yMoveUp, yDuration).SetLoops(-1, LoopType.Yoyo).SetEase(yEase);
+        YMove();
     }
 
     void Stop()
@@ -60,38 +77,52 @@ public class Fairy : MonoBehaviour
 
     void FinalStop()
     {
-        _xTween = transform.DOMoveX(xFinalStop, startFinalDuration).SetEase(xEase);
-    }
-
-    void OnTriggerEnter2D(Collider2D other)
-    {
-        if(other.gameObject.CompareTag("Player") && startMove && detectedPlayer)
-        {
-            FinalStop();
-        }
-    }
-
-    void OnTriggerStay2D(Collider2D other)
-    {
-        if(other.gameObject.CompareTag("Player") && startMove)
-        {
-            detectedPlayer = true;
-        }
-    }
-    
-
-    void OnTriggerExit2D(Collider2D other)
-    {
-        if(other.gameObject.CompareTag("Player") && startMove)
-        {
-            detectedPlayer = false;
-            _xTween.Kill();
-        }
+        transform.DOMoveX(xFinalStop, startFinalDuration).SetEase(xEase);
     }
 
     IEnumerator StartFinalMove()
     {
         yield return new WaitForSeconds(finalDelay);
         startMove = true;
+    }
+    #endregion
+
+    void AwakeFairy()
+    {
+        if(transform.position.x >= 65)
+        {
+            transform.DOKill();
+            if(!isActive && detectedPlayer)
+            {
+                isActive = true;
+                player.soPlayerSetup.cutScene = true;
+                StartCoroutine(PlayerAnim());
+                _currentFairy = Instantiate(fairyBody);
+                _currentFairy.transform.position = awakePos.position;
+                _currentFairy.transform.DOScale(0, awakeDuration).SetEase(awakeEase).SetDelay(awakeDelay).From();
+            }
+        }
+    }
+
+    void OnTriggerEnter2D(Collider2D other)
+    {
+        if(other.gameObject.CompareTag("Player"))
+        {
+            detectedPlayer = true;
+        }
+    }
+    
+    void OnTriggerExit2D(Collider2D other)
+    {
+        if(other.gameObject.CompareTag("Player"))
+        {
+            detectedPlayer = false;
+        }
+    }
+
+    IEnumerator PlayerAnim()
+    {
+        yield return new WaitForSeconds(awakeDelay);
+        player.currentPlayer.SetTrigger(player.soPlayerSetup.triggerSurprised);
     }
 }

@@ -42,6 +42,8 @@ public class SOPlayerSetup : ScriptableObject
     //Scene Start/Awake
     public string triggerToAwake = "Awake";
     public float cutSceneDuration;
+    //Surprised
+    public string triggerSurprised = "Surprised";
 
     [Header("Live & Death")]
     public bool gameOver;

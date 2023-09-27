@@ -1,5 +1,36 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &1490037132
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1490037133}
+  m_Layer: 0
+  m_Name: Awake Pos
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1490037133
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1490037132}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4549109502121451427}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &4453613119514217356
 GameObject:
   m_ObjectHideFlags: 0
@@ -28,9 +59,10 @@ Transform:
   m_GameObject: {fileID: 4453613119514217356}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -70.6, y: 1.6, z: 16.1}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: -1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 1490037133}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -46,11 +78,27 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9cbd054ab079f874988183de9c6a79af, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ease: 0
-  duration: 1
-  xStartAnim: 0
-  xStop: 0
-  xFinalStop: 0
+  fairyBody: {fileID: 2226461971852967721, guid: 2d976e4bfe535394c88a83021177f3fc, type: 3}
+  awakePos: {fileID: 1490037133}
+  awakeEase: 27
+  xEase: 6
+  yEase: 35
+  startMove: 0
+  isActive: 0
+  yMoveUp: -14
+  yMoveDown: -16
+  xStartAnim: -70
+  xStop: -56.5
+  xFinalStop: 65
+  yDuration: 2
+  startDuration: 1
+  normalDuration: 1
+  startFinalDuration: 1
+  awakeDuration: 0.2
+  startDelay: 1.5
+  stopDelay: 7
+  finalDelay: 10
+  awakeDelay: 1
 --- !u!198 &2342207991628212277
 ParticleSystem:
   m_ObjectHideFlags: 0
@@ -133,9 +181,9 @@ ParticleSystem:
     enabled: 1
     startLifetime:
       serializedVersion: 2
-      minMaxState: 0
-      scalar: 5
-      minScalar: 5
+      minMaxState: 3
+      scalar: 1.5
+      minScalar: 1
       maxCurve:
         serializedVersion: 2
         m_Curve:
@@ -938,7 +986,7 @@ ParticleSystem:
     rateOverDistance:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 1
+      scalar: 0.5
       minScalar: 0
       maxCurve:
         serializedVersion: 2
@@ -4799,7 +4847,7 @@ ParticleSystemRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 13
+  m_SortingOrder: 16
   m_RenderMode: 0
   m_MeshDistribution: 0
   m_SortMode: 0

@@ -63,6 +63,7 @@ public class Player : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        StartCoroutine(AwakeAnim());
         Init();
     }
 
@@ -73,13 +74,17 @@ public class Player : MonoBehaviour
         soPlayerSetup.direction = true;
         soPlayerSetup.isFalling = false;
         soPlayerSetup.grounded = true;
-        StartCoroutine(AwakeAnim());
     }
 
     // Update is called once per frame
     void Update()
     {
-        if(soPlayerSetup.cutScene) return;
+        if(soPlayerSetup.cutScene) 
+        {
+            _rb.velocity = Vector3.zero;
+            currentPlayer.SetBool(soPlayerSetup.triggerToWalk, false);
+            return;
+        }
 
         if(playerHealth.soHealth._isDead)
         {
@@ -267,7 +272,7 @@ public class Player : MonoBehaviour
     IEnumerator AwakeAnim()
     {
         soPlayerSetup.cutScene = true;
-        soPlayerSetup.anim.SetTrigger(soPlayerSetup.triggerToAwake);
+        currentPlayer.SetTrigger(soPlayerSetup.triggerToAwake);
         yield return new WaitForSeconds(soPlayerSetup.cutSceneDuration);
         soPlayerSetup.cutScene = false;
     }
