@@ -13386,6 +13386,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6864618267774935255, guid: 9e109184352a8434fbc8e0863d45bc4d, type: 3}
+      propertyPath: player
+      value: 
+      objectReference: {fileID: 1133834978}
+    - target: {fileID: 6864618267774935255, guid: 9e109184352a8434fbc8e0863d45bc4d, type: 3}
       propertyPath: awakePos
       value: 
       objectReference: {fileID: 1490037133}
