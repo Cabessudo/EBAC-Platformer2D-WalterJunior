@@ -74,6 +74,7 @@ public class Player : MonoBehaviour
         soPlayerSetup.direction = true;
         soPlayerSetup.isFalling = false;
         soPlayerSetup.grounded = true;
+        soPlayerSetup.readyToJump = true;
     }
 
     // Update is called once per frame
@@ -83,6 +84,7 @@ public class Player : MonoBehaviour
         {
             _rb.velocity = Vector3.zero;
             currentPlayer.SetBool(soPlayerSetup.triggerToWalk, false);
+            currentPlayer.SetBool(soPlayerSetup.triggerToRun, false);
             return;
         }
 
@@ -97,6 +99,7 @@ public class Player : MonoBehaviour
           Jump();
           Movement();
           Falling();
+          EndCutscene();
         } 
             
     }
@@ -152,7 +155,7 @@ public class Player : MonoBehaviour
 
     void Jump()
     {
-        if(Input.GetKeyDown(KeyCode.Space) && soPlayerSetup.grounded && !soPlayerSetup.gameOver && GroundCheck())
+        if(Input.GetKeyDown(KeyCode.Space) && soPlayerSetup.grounded && !soPlayerSetup.gameOver && GroundCheck() && soPlayerSetup.readyToJump)
         {
             VFXManager.Instance.PlayVFXByType(VFXManager.VFXType.Jump, transform.position);
             PS_dust.Stop();
@@ -168,6 +171,7 @@ public class Player : MonoBehaviour
             
             JumpAnimation();
             StartCoroutine(FallingAnimantion());
+            StartCoroutine(JumpReset());
         }
     }
 
@@ -248,6 +252,13 @@ public class Player : MonoBehaviour
             SwitchJumpStyle(JumpStyle.Fall);
         }
     }
+
+    IEnumerator JumpReset()
+    {
+        yield return new WaitForSeconds(soPlayerSetup.jumpCoolDown);
+        soPlayerSetup.readyToJump = true;
+    }
+
     IEnumerator FallingAnimantion()
     {
         yield return new WaitForSeconds(soPlayerSetup.timeToFalling);
@@ -281,5 +292,17 @@ public class Player : MonoBehaviour
     public void DeadAnimation()
     {
         currentPlayer.SetTrigger(soPlayerSetup.triggerDeath);
+    }
+
+    void EndCutscene()
+    {
+        if(transform.position.x > 40)
+        {
+            soPlayerSetup.readyToJump = false;
+        }
+        if(transform.position.x >= 55)
+        {
+            soPlayerSetup.cutScene = true;
+        }
     }
 }

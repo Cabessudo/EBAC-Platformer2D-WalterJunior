@@ -11,12 +11,15 @@ public class Fairy : MonoBehaviour
     public GameObject fairyBody;
     private GameObject _currentFairy;
     public Transform awakePos;
+    public Animator anim;
+    public string triggerThereYouGo = "ThereYouGo"; 
     public Ease awakeEase;
     public Ease xEase;
     public Ease yEase;
     public bool startMove;
     public bool isActive = false;
     public bool detectedPlayer = false;
+    public bool awake = false;
     
 
     [Header("Move Parameters")]
@@ -34,7 +37,7 @@ public class Fairy : MonoBehaviour
     public float awakeDuration;
     
 
-    //Dealaies
+    //Delaies
     public float startDelay;
     public float stopDelay;
     public float finalDelay;
@@ -89,7 +92,8 @@ public class Fairy : MonoBehaviour
 
     void AwakeFairy()
     {
-        if(transform.position.x >= 65)
+        awake = transform.position.x >= 65;
+        if(awake)
         {
             transform.DOKill();
             if(!isActive && detectedPlayer)

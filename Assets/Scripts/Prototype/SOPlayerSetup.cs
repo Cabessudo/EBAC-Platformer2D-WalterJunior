@@ -20,6 +20,8 @@ public class SOPlayerSetup : ScriptableObject
     public float jumpDuration = 1;
     public float jumpScaleY = 1.2f;
     public float jumpScaleX = 0.8f;
+    public bool readyToJump = true;
+    public float jumpCoolDown = 0.1f;
     public Ease easeOut = Ease.OutBack;
     public string triggerJump = "JumpUp";
     //Jump Down
