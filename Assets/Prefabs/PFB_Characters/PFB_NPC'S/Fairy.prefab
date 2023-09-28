@@ -43,6 +43,7 @@ GameObject:
   - component: {fileID: 6864618267774935255}
   - component: {fileID: 2342207991628212277}
   - component: {fileID: 8210256652436412918}
+  - component: {fileID: 891586388}
   m_Layer: 0
   m_Name: Fairy
   m_TagString: Untagged
@@ -78,23 +79,28 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9cbd054ab079f874988183de9c6a79af, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  player: {fileID: 0}
   fairyBody: {fileID: 2226461971852967721, guid: 2d976e4bfe535394c88a83021177f3fc, type: 3}
   awakePos: {fileID: 1490037133}
+  anim: {fileID: 4361573310885923027, guid: 2d976e4bfe535394c88a83021177f3fc, type: 3}
+  triggerThereYouGo: ThereYouGo
   awakeEase: 27
   xEase: 6
   yEase: 35
   startMove: 0
   isActive: 0
+  detectedPlayer: 0
+  awake: 0
   yMoveUp: -14
   yMoveDown: -16
   xStartAnim: -70
   xStop: -56.5
-  xFinalStop: 65
+  xFinalStop: 80
   yDuration: 2
   startDuration: 1
   normalDuration: 1
   startFinalDuration: 1
-  awakeDuration: 0.2
+  awakeDuration: 1
   startDelay: 1.5
   stopDelay: 7
   finalDelay: 10
@@ -4878,3 +4884,29 @@ ParticleSystemRenderer:
   m_MeshWeighting2: 1
   m_MeshWeighting3: 1
   m_MaskInteraction: 0
+--- !u!61 &891586388
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4453613119514217356}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 5, y: 0}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0, y: 0}
+    oldSize: {x: 0, y: 0}
+    newSize: {x: 0, y: 0}
+    adaptiveTilingThreshold: 0
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  serializedVersion: 2
+  m_Size: {x: 11, y: 7.06}
+  m_EdgeRadius: 0

@@ -13,6 +13,7 @@ public class ObjectivesUI : MonoBehaviour
     public float textScale = 1.3f;
     public float duration = 1;
     public float delay = 7;
+    public float timeToDisable = 3;
     private string triggerToComplete = "Complete";
 
     // Start is called before the first frame update
@@ -26,6 +27,15 @@ public class ObjectivesUI : MonoBehaviour
     void Update()
     {
         if(fairy.isActive)
-        anim.SetTrigger(triggerToComplete);
+        {
+            anim.SetTrigger(triggerToComplete);
+            StartCoroutine(Disable());
+        }
+    }
+
+    IEnumerator Disable()
+    {
+        yield return new WaitForSeconds(timeToDisable);
+        objectiveText.gameObject.SetActive(false);
     }
 }

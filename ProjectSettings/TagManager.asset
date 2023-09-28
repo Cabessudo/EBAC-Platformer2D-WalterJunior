@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Ground
   - Enemy
+  - Fairy
   layers:
   - Default
   - TransparentFX
@@ -13,7 +14,7 @@ TagManager:
   - WhatIsGround
   - Water
   - UI
-  - 
+  - Player
   - 
   - 
   - 

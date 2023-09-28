@@ -1893,6 +1893,10 @@ PrefabInstance:
       propertyPath: m_Bounds.m_Extent.z
       value: 0.015
       objectReference: {fileID: 0}
+    - target: {fileID: 2191974428104897494, guid: 8f0a112dd4756bf4fb5e36b6a29ebf4d, type: 3}
+      propertyPath: m_SortingOrder
+      value: 12
+      objectReference: {fileID: 0}
     - target: {fileID: 2755848658822882392, guid: 8f0a112dd4756bf4fb5e36b6a29ebf4d, type: 3}
       propertyPath: m_Bounds.m_Center.x
       value: -0.00010499358

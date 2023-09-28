@@ -603,7 +603,7 @@ GameObject:
   - component: {fileID: 7369723223662314069}
   m_Layer: 0
   m_Name: PFB_Fairy_Body
-  m_TagString: Untagged
+  m_TagString: Fairy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
