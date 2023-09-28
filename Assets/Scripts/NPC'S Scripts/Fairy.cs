@@ -104,6 +104,7 @@ public class Fairy : MonoBehaviour
                 _currentFairy = Instantiate(fairyBody);
                 _currentFairy.transform.position = awakePos.position;
                 _currentFairy.transform.DOScale(0, awakeDuration).SetEase(awakeEase).SetDelay(awakeDelay).From();
+                anim = _currentFairy.GetComponent<Animator>();
             }
         }
     }

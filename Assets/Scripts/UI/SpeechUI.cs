@@ -10,6 +10,7 @@ public class SpeechUI : UIManager
     public float radious = 3;
     public float waitAnim = 1;
     public bool onRadious;
+    private bool playOnce = true;
 
 
     // Update is called once per frame
@@ -85,9 +86,10 @@ public class SpeechUI : UIManager
 
     void ThereYouGoAnim()
     {
-        if(speechText.text == sentences[2])
+        if(index == 2 && playOnce)
         {
             fairy.anim.SetTrigger(fairy.triggerThereYouGo);
-        }
+            playOnce = false;
+        }  
     }
 }
