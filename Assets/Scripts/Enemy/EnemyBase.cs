@@ -10,6 +10,8 @@ public class EnemyBase : MonoBehaviour
     public BoxCollider2D enemyCollider;
     public HealthBase enemyHealth;
     public SO_Health soEnemyHealth;
+    public AudioClip damageAudio;
+    public AudioSource enemyAudio;
     [SerializeField] Animator _anim;
 
     [Header("Damage")]
@@ -59,6 +61,7 @@ public class EnemyBase : MonoBehaviour
     public void TakeDamage(int amount)
     {
         enemyHealth.Damage(amount);
+        enemyAudio.PlayOneShot(damageAudio, 1);
         enemyHealth.flashColor.Flash();
     } 
 }

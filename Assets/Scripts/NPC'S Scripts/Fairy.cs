@@ -13,6 +13,7 @@ public class Fairy : MonoBehaviour
     public Transform awakePos;
     public Animator anim;
     public string triggerThereYouGo = "ThereYouGo"; 
+    public string triggerHandWave = "HandWave";
     public Ease awakeEase;
     public Ease xEase;
     public Ease yEase;

@@ -213,6 +213,22 @@ public class Player : MonoBehaviour
         }
     }
 
+    void OnTriggerEnter2D(Collider2D other)
+    {
+        if(other.gameObject.CompareTag("Cutscene") && !soPlayerSetup.gameOver)
+        {
+            soPlayerSetup.readyToJump = false;
+        }
+    }
+
+    void OnTriggerExit2D(Collider2D other)
+    {
+        if(other.gameObject.CompareTag("Cutscene") && !soPlayerSetup.gameOver)
+        {
+            soPlayerSetup.readyToJump = true;
+        }
+    }    
+
     void Land()
     {
         VFXManager.Instance.PlayVFXByType(VFXManager.VFXType.Jump, transform.position);
@@ -296,10 +312,6 @@ public class Player : MonoBehaviour
 
     void EndCutscene()
     {
-        if(transform.position.x > 40)
-        {
-            soPlayerSetup.readyToJump = false;
-        }
         if(transform.position.x >= 55)
         {
             soPlayerSetup.cutScene = true;

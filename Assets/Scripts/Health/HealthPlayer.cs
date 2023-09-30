@@ -5,7 +5,8 @@ using UnityEngine.UI;
 
 public class HealthPlayer : HealthBase
 {
-    public Image[] hearts;
+    public GameObject[] hearts;
+    public AudioSource hurtAudio;
 
     public void HeartUI()
     {
@@ -13,11 +14,11 @@ public class HealthPlayer : HealthBase
         {
             if(i < soHealth.currentLife)
             {
-                hearts[i].enabled = true;
+                hearts[i].SetActive(true);
             }
             else
             {
-                hearts[i].enabled = false;
+                hearts[i].SetActive(false);
             }
         }
     }
@@ -25,6 +26,7 @@ public class HealthPlayer : HealthBase
     public override void Damage(int damage)
     {
         base.Damage(damage);
+        hurtAudio.Play();
         HeartUI();
     }
 }

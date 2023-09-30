@@ -8,6 +8,7 @@ public class GunBase : MonoBehaviour
     [SerializeField] Animator _anim;
     public ProjectileBase PFB_projectile;
     public Player player;
+    public AudioShootRandomPlay audioShoot;
     public Transform shootPos;
     private Coroutine _currentCoroutine;
     public KeyCode keyToShoot = KeyCode.F;
@@ -39,6 +40,7 @@ public class GunBase : MonoBehaviour
         var projectile = Instantiate(PFB_projectile);
         projectile.transform.position = shootPos.position;
         projectile.side = player.transform.localScale.x;
+        if(audioShoot != null) audioShoot.PlayAudioRandomShoot();
     }
 
     IEnumerator ShootRotine()

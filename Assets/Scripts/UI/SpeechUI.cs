@@ -10,7 +10,8 @@ public class SpeechUI : UIManager
     public float radious = 3;
     public float waitAnim = 1;
     public bool onRadious;
-    private bool playOnce = true;
+    private bool _playOnceTYG = true;
+    private bool _playOnceHW = true;
 
 
     // Update is called once per frame
@@ -19,6 +20,7 @@ public class SpeechUI : UIManager
         showedText = speechText.text == sentences[index];
         Interact();
         ThereYouGoAnim();
+        HandWaveAnim();
 
         if(onRadious && playerScript.soPlayerSetup.cutScene && fairy.awake && talkChance)
         StartCoroutine(WaitAnim());
@@ -86,10 +88,19 @@ public class SpeechUI : UIManager
 
     void ThereYouGoAnim()
     {
-        if(index == 2 && playOnce)
+        if(index == 2 && _playOnceTYG)
         {
             fairy.anim.SetTrigger(fairy.triggerThereYouGo);
-            playOnce = false;
+            _playOnceTYG = false;
         }  
+    }
+
+    void HandWaveAnim()
+    {
+        if(index == 5 && _playOnceHW)
+        {
+            fairy.anim.SetTrigger(fairy.triggerHandWave);
+            _playOnceHW = false;
+        }
     }
 }
