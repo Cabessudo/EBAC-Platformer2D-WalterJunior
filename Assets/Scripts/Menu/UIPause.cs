@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
 using TMPro;
+using Ebac.Core.Singleton;
 
-public class UIPause : MonoBehaviour
+public class UIPause : Singleton<UIPause>
 {
     public GameObject menuScreen;
     public TextMeshProUGUI pauseAlertText;
@@ -30,9 +31,16 @@ public class UIPause : MonoBehaviour
         pause = b;
 
         if(pause)
-        menuScreen.SetActive(true);
+        {
+            menuScreen.SetActive(true);
+            Time.timeScale = 0;
+        }   
         else
-        menuScreen.SetActive(false);
+        {
+            menuScreen.SetActive(false);
+            Time.timeScale = 1;
+        }
+        
     }
 
     public void ColorBlink()
