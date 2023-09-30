@@ -7,7 +7,7 @@ public class GunBase : MonoBehaviour
 
     [SerializeField] Animator _anim;
     public ProjectileBase PFB_projectile;
-    private GameObject _playerDirection;
+    public Player player;
     public Transform shootPos;
     private Coroutine _currentCoroutine;
     public KeyCode keyToShoot = KeyCode.F;
@@ -17,17 +17,16 @@ public class GunBase : MonoBehaviour
 
     void Start()
     {
-        _playerDirection = GameObject.FindGameObjectWithTag("Player");
+        player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
     }
-
     void Update()
     {
-        if(Input.GetKeyDown(keyToShoot))
+        if(Input.GetKeyDown(keyToShoot) && !UIPause.Instance.pause && !player.soPlayerSetup.cutScene)
         {
             _isShooting = true;
             _currentCoroutine = StartCoroutine(ShootRotine());
         }        
-        else if(Input.GetKeyUp(keyToShoot))
+        else if(Input.GetKeyUp(keyToShoot) && !UIPause.Instance.pause && !player.soPlayerSetup.cutScene)
         {
             _isShooting = false;
             _anim.SetBool(triggerToShoot, false);
@@ -39,7 +38,7 @@ public class GunBase : MonoBehaviour
     {
         var projectile = Instantiate(PFB_projectile);
         projectile.transform.position = shootPos.position;
-        projectile.side = _playerDirection.transform.localScale.x;
+        projectile.side = player.transform.localScale.x;
     }
 
     IEnumerator ShootRotine()

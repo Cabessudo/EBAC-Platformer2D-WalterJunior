@@ -47,6 +47,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _anim: {fileID: 6539771916021965716}
   PFB_projectile: {fileID: 7002994037179733626, guid: 663f25c701550fa46b320ef3255ecf42, type: 3}
+  player: {fileID: 0}
   shootPos: {fileID: 161696320915888759}
   keyToShoot: 102
   timeBetweenShoot: 0.2

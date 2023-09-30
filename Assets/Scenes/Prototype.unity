@@ -13671,6 +13671,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1133834975}
     m_Modifications:
+    - target: {fileID: 161696320517608876, guid: 95cd55aeef856eb429bea9cda026a61d, type: 3}
+      propertyPath: player
+      value: 
+      objectReference: {fileID: 1133834978}
     - target: {fileID: 714589476098665148, guid: 95cd55aeef856eb429bea9cda026a61d, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -13755,13 +13759,29 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6312152358695389191, guid: 95cd55aeef856eb429bea9cda026a61d, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0.1157285
+      objectReference: {fileID: 0}
+    - target: {fileID: 6312152358695389191, guid: 95cd55aeef856eb429bea9cda026a61d, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0.4388061
+      objectReference: {fileID: 0}
+    - target: {fileID: 7846526847454405808, guid: 95cd55aeef856eb429bea9cda026a61d, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0.4817788
+      objectReference: {fileID: 0}
+    - target: {fileID: 7846526847454405808, guid: 95cd55aeef856eb429bea9cda026a61d, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0.00000013089735
+      objectReference: {fileID: 0}
     - target: {fileID: 8692931773858354286, guid: 95cd55aeef856eb429bea9cda026a61d, type: 3}
       propertyPath: m_Name
       value: PFB_Astronaut
       objectReference: {fileID: 0}
     - target: {fileID: 8692931773858354286, guid: 95cd55aeef856eb429bea9cda026a61d, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 95cd55aeef856eb429bea9cda026a61d, type: 3}
