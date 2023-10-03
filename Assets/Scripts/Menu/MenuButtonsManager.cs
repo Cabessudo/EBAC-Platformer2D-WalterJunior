@@ -12,6 +12,7 @@ public class MenuButtonsManager : MonoBehaviour
     public float animDuration = 1;
     public float animDelay = 1;
     public float scale = 2;
+    public float scaleAnim = .3f; 
     public Ease ease;
 
     // Start is called before the first frame update
@@ -50,7 +51,7 @@ public class MenuButtonsManager : MonoBehaviour
     {
         foreach(var b in buttons)
         {
-            b.transform.DOScale(scale - .3f, animDuration).SetDelay(animDelay).SetLoops(-1, LoopType.Yoyo).SetEase(ease);
+            b.transform.DOScale(scale - scaleAnim, animDuration).SetDelay(animDelay).SetLoops(-1, LoopType.Yoyo).SetEase(ease);
         }
     }
 }
