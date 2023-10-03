@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using UnityEngine.UI;
 using DG.Tweening;
 
 public class ObjectivesUI : MonoBehaviour
@@ -9,6 +10,7 @@ public class ObjectivesUI : MonoBehaviour
     public Fairy fairy;
     public Animator anim;
     public TextMeshProUGUI objectiveText;
+    public Image complete;
     public Ease ease = Ease.Linear;
     public float textScale = 1.3f;
     public float duration = 1;
@@ -36,6 +38,7 @@ public class ObjectivesUI : MonoBehaviour
     IEnumerator Disable()
     {
         yield return new WaitForSeconds(timeToDisable);
-        objectiveText.gameObject.SetActive(false);
+        objectiveText.DOColor(new Color(255, 227, 0, 0), duration * 2).SetEase(ease);
+        complete.DOColor(new Color(0, 0, 0, 0), duration * 2).SetEase(ease);
     }
 }

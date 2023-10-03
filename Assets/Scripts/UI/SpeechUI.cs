@@ -90,7 +90,7 @@ public class SpeechUI : UIManager
     {
         if(index == 2 && _playOnceTYG)
         {
-            fairy.anim.SetTrigger(fairy.triggerThereYouGo);
+            if(fairy != null) fairy.anim.SetTrigger(fairy.triggerThereYouGo);
             _playOnceTYG = false;
         }  
     }
@@ -99,7 +99,7 @@ public class SpeechUI : UIManager
     {
         if(index == 5 && _playOnceHW)
         {
-            fairy.anim.SetTrigger(fairy.triggerHandWave);
+            if(fairy != null) fairy.anim.SetTrigger(fairy.triggerHandWave);
             _playOnceHW = false;
         }
     }

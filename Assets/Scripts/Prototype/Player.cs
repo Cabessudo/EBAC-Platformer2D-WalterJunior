@@ -75,6 +75,7 @@ public class Player : MonoBehaviour
         soPlayerSetup.isFalling = false;
         soPlayerSetup.grounded = true;
         soPlayerSetup.readyToJump = true;
+        soPlayerSetup.isWalking = false;
     }
 
     // Update is called once per frame
@@ -110,18 +111,21 @@ public class Player : MonoBehaviour
         {
             _rb.velocity = new Vector2(soPlayerSetup.speed, _rb.velocity.y);
             soPlayerSetup.direction = true;
+            soPlayerSetup.isWalking = true;
             currentPlayer.SetBool(soPlayerSetup.triggerToWalk, true);
         }
         else if(Input.GetKey(KeyCode.A))
         {
             _rb.velocity = new Vector2(-soPlayerSetup.speed, _rb.velocity.y);
             soPlayerSetup.direction = false;
+            soPlayerSetup.isWalking = true;
             currentPlayer.SetBool(soPlayerSetup.triggerToWalk, true);
         }
         else
         {
             currentPlayer.SetBool(soPlayerSetup.triggerToWalk, false);
             currentPlayer.SetBool(soPlayerSetup.triggerToRun, false);
+            soPlayerSetup.isWalking = false;
         }
 
         //Change Direction
@@ -131,12 +135,12 @@ public class Player : MonoBehaviour
         _rb.transform.DOScaleX(-1, soPlayerSetup.durationToSwipe);
         
         //Run
-        if(Input.GetKey(KeyCode.LeftShift))
+        if(Input.GetKey(KeyCode.LeftShift) && soPlayerSetup.isWalking)
         {
             currentPlayer.SetBool(soPlayerSetup.triggerToRun, true);
             soPlayerSetup.speed = soPlayerSetup.speedRun;
         }
-        else
+        else 
         {
             currentPlayer.SetBool(soPlayerSetup.triggerToRun, false);
             soPlayerSetup.speed = soPlayerSetup.flatSpeed;

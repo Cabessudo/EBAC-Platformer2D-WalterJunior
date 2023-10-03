@@ -5,12 +5,16 @@ using Ebac.Core.Singleton;
 using TMPro;
 using UnityEngine.UI;
 
-public class UIManager : MonoBehaviour
+public class UIManager : Singleton<UIManager>
 {
     [Header("References")]
     public GameObject dialogeText;
     public GameObject[] headProfile;
     public TextMeshProUGUI speechText;
+    //End Text
+    public GameObject endText;
+    public GameObject heartUI;
+    public GameObject coinsUI;
 
     [Header("Settings")]
     public float textSpeed;

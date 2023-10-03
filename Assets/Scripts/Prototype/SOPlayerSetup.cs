@@ -41,6 +41,7 @@ public class SOPlayerSetup : ScriptableObject
     public string triggerToWalk = "Walk";
     public string triggerToRun = "Run";
     public bool direction;
+    public bool isWalking;
     //Scene Start/Awake
     public string triggerToAwake = "Awake";
     public float cutSceneDuration;

@@ -8,6 +8,11 @@ public class HealthPlayer : HealthBase
     public GameObject[] hearts;
     public AudioSource hurtAudio;
 
+    void Update()
+    {
+        HeartUI();
+    }
+    
     public void HeartUI()
     {
         for(int i = 0; i < hearts.Length; i++)
