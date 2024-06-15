@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.PlayerLoop;
 using Ebac.Core.Singleton;
 
-public class HealthBase : MonoBehaviour
+public class HealthBase : MonoBehaviour, IDamageable
 {
     public Action OnKill; // IMPORTANT TO REMEMBER
     public FlashColor flashColor;
@@ -33,7 +33,7 @@ public class HealthBase : MonoBehaviour
         if(soHealth._isDead) return;
 
         soHealth.currentLife -= damage;
-        flashColor.Flash();
+        flashColor?.Flash();
 
         if(soHealth.currentLife <= 0)
         {

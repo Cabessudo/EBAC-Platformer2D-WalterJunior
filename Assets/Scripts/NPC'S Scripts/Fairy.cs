@@ -84,7 +84,7 @@ public class Fairy : MonoBehaviour
         transform.DOMoveX(xFinalStop, startFinalDuration).SetEase(xEase);
     }
 
-    IEnumerator StartFinalMove()
+    public IEnumerator StartFinalMove()
     {
         yield return new WaitForSeconds(finalDelay);
         startMove = true;
