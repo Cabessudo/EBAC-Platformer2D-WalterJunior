@@ -6,6 +6,7 @@ using DG.Tweening;
 public class FollowPlayer : MonoBehaviour
 {
     private GameObject _player;
+    public GameUI gameUI;
     public Ease ease;
     public Ease easeEnd = Ease.Linear;
     private bool _start;
@@ -31,10 +32,10 @@ public class FollowPlayer : MonoBehaviour
         if(_player != null && _start)
         StartFollowPlayer();
         
-        if(UIManager.Instance.index == 5 && !_theEnd)
-        {
-            StartCoroutine(EndAnim());   
-        }
+        // if(UIManager.Instance.index == 5 && !_theEnd)
+        // {
+        //     StartCoroutine(EndAnim());   
+        // }
     }
 
     IEnumerator AnimStart()
@@ -53,9 +54,7 @@ public class FollowPlayer : MonoBehaviour
     {
         transform.DOMoveY(yEndPos, endDuration).SetEase(easeEnd).SetDelay(delay);
         yield return new WaitForSeconds(delayEnd);
-        UIManager.Instance.heartUI.SetActive(false);
-        UIManager.Instance.coinsUI.SetActive(false);
-        UIManager.Instance.endText.SetActive(true);
+        gameUI.ShowEndUI();
         _theEnd = true;
     }
 }

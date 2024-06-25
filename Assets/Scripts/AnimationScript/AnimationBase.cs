@@ -13,6 +13,12 @@ public class AnimationBase<T> : MonoBehaviour where T : System.Enum
         anim.SetTrigger(setup.animTrigger);
     }
 
+    public void GetAnimByType(T currType, bool b)
+    {
+        var setup = animSetups.Find(i => i.type.ToString() == currType.ToString());
+        anim.SetBool(setup.animTrigger, b);
+    }
+
     [System.Serializable]
     public class AnimSetup
     {

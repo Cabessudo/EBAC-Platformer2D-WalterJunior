@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
+using Dialogue;
 
 public class Fairy : MonoBehaviour
 {
@@ -9,126 +10,79 @@ public class Fairy : MonoBehaviour
     [Header("References")]
     public Player player;
     public GameObject fairyBody;
-    private GameObject _currentFairy;
-    public Transform awakePos;
-    public Animator anim;
-    public string triggerThereYouGo = "ThereYouGo"; 
-    public string triggerHandWave = "HandWave";
+
     public Ease awakeEase;
     public Ease xEase;
-    public Ease yEase;
-    public bool startMove;
-    public bool isActive = false;
-    public bool detectedPlayer = false;
     public bool awake = false;
     
 
     [Header("Move Parameters")]
-    public float yMoveUp;
-    public float yMoveDown;
     public float xStartAnim;
-    public float xStop;
+    public float xFirstStop;
     public float xFinalStop;
 
     //Durations
-    public float yDuration = .1f;
-    public float startDuration = 1;
     public float normalDuration = 1;
     public float startFinalDuration = 8;
     public float awakeDuration;
-    
 
-    //Delaies
-    public float startDelay;
-    public float stopDelay;
-    public float finalDelay;
+    //Delays
+    public float firstStopDelay;
     public float awakeDelay;
 
     // Start is called before the first frame update
     void Start()
     {
-        StartAnim();
-        StartCoroutine(StartFinalMove());
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        if(!startMove)
-        Stop();
-        else 
-        FinalStop();
-
-        AwakeFairy();
+        AwakePlayerAnim();
     }
 
     #region Animation
-    void YMove()
+
+    void AwakePlayerAnim()
     {
-        transform.DOMoveY(yMoveUp, yDuration).SetLoops(-1, LoopType.Yoyo).SetEase(yEase);
+        transform.DOMoveX(xStartAnim, normalDuration).SetLoops(-1, LoopType.Yoyo).SetEase(xEase);
+        Invoke(nameof(FirstStop), firstStopDelay);
     }
 
-    void StartAnim()
+    void FirstStop()
     {
-        transform.DOMoveX(xStartAnim, startDuration).SetLoops(-1, LoopType.Yoyo).SetEase(xEase).SetDelay(startDelay);
-        YMove();
+        transform.DOMoveX(xFirstStop, normalDuration).SetEase(xEase).OnComplete(
+            delegate{ AwakeFairy(); });
     }
 
-    void Stop()
+    public void FinalStop()
     {
-        transform.DOMoveX(xStop, normalDuration).SetEase(xEase).SetDelay(stopDelay);
+        HideFairy();
+        transform.DOMoveX(xFinalStop, startFinalDuration).SetEase(xEase).SetDelay(awakeDuration);
+        player.soPlayerSetup.cutScene = false;
     }
 
-    void FinalStop()
+    public void ShowFairy()
     {
-        transform.DOMoveX(xFinalStop, startFinalDuration).SetEase(xEase);
+        transform.DOKill();
+        fairyBody.transform.DOScale(Vector3.one, awakeDuration).SetEase(awakeEase);
     }
 
-    public IEnumerator StartFinalMove()
+    void HideFairy()
     {
-        yield return new WaitForSeconds(finalDelay);
-        startMove = true;
+        fairyBody.transform.DOScale(Vector3.zero, awakeDuration).SetEase(awakeEase);
     }
     #endregion
 
     void AwakeFairy()
     {
-        awake = transform.position.x >= 65;
-        if(awake)
+        if(!awake)
         {
-            transform.DOKill();
-            if(!isActive && detectedPlayer)
-            {
-                isActive = true;
-                player.soPlayerSetup.cutScene = true;
-                StartCoroutine(PlayerAnim());
-                _currentFairy = Instantiate(fairyBody);
-                _currentFairy.transform.position = awakePos.position;
-                _currentFairy.transform.DOScale(0, awakeDuration).SetEase(awakeEase).SetDelay(awakeDelay).From();
-                anim = _currentFairy.GetComponent<Animator>();
-            }
+            awake = true;
+            ShowFairy();
+            StartCoroutine(AwakeRoutine());
         }
     }
 
-    void OnTriggerEnter2D(Collider2D other)
+    IEnumerator AwakeRoutine()
     {
-        if(other.gameObject.CompareTag("Player"))
-        {
-            detectedPlayer = true;
-        }
-    }
-    
-    void OnTriggerExit2D(Collider2D other)
-    {
-        if(other.gameObject.CompareTag("Player"))
-        {
-            detectedPlayer = false;
-        }
-    }
-
-    IEnumerator PlayerAnim()
-    {
-        yield return new WaitForSeconds(awakeDelay);
-        player.currentPlayer.SetTrigger(player.soPlayerSetup.triggerSurprised);
+        yield return new WaitForSeconds(awakeDuration);
+        player.playerAnim.GetAnimByType(PlayerAnimType.Surprised);
+        TalkManager.Instance.Talk(DialogueType.First_Dialogue);
     }
 }

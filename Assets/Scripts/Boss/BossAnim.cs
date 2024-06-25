@@ -5,11 +5,10 @@ using UnityEngine;
 public enum BossAnimType
 {
     Shoot,
-    Jump,
     Slam,
-    Stunned
+    Stunned,
+    Idle
 }
 
 public class BossAnim : AnimationBase<BossAnimType>
-{
-}
+{}

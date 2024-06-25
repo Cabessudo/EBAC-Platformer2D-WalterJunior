@@ -25,16 +25,6 @@ public class ObjectivesUI : MonoBehaviour
         objectiveText.transform.DOScale(textScale, duration).SetLoops(-1, LoopType.Yoyo).SetEase(ease).SetDelay(delay);
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        if(fairy.isActive)
-        {
-            anim.SetTrigger(triggerToComplete);
-            StartCoroutine(Disable());
-        }
-    }
-
     IEnumerator Disable()
     {
         yield return new WaitForSeconds(timeToDisable);

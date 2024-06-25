@@ -9,22 +9,26 @@ public class EnemyBase : MonoBehaviour
     [Header("References")]
     public BoxCollider2D enemyCollider;
     public HealthBase enemyHealth;
-    public SO_Health soEnemyHealth;
     public AudioClip damageAudio;
     public AudioSource enemyAudio;
-    [SerializeField] Animator _anim;
+    [SerializeField] EnemyAnim _anim;
+    [SerializeField] List<Transform> waypoints;
+    protected int waypointIndex;
 
-    [Header("Damage")]
+    [Header("Parameters")]
+    protected int direction = 1;
     public int damage = 1;
-    public string triggerAttack = "Attack";
-    public string triggerDead = "Death";
+    public float speed = 5;
 
-    void Awake()
+    void Start()
     {
         if(enemyHealth != null)
         {
             enemyHealth.OnKill += OnEnemyDeath;
         }
+
+        StartCoroutine(PatrolRoutine());
+
     }
 
     void OnEnemyDeath()
@@ -33,13 +37,42 @@ public class EnemyBase : MonoBehaviour
         DeadAnimation();
     }
 
+    public virtual void Patrol()
+    {
+        StopAllCoroutines();
+        StartCoroutine(PatrolRoutine());
+    }
+
+    IEnumerator PatrolRoutine()
+    {
+        // _anim.GetAnimByType(EnemyAnimType.Run);
+        while(Vector3.Distance(transform.position, waypoints[waypointIndex].position) < 0.1f)
+        {
+            transform.Translate(Vector3.left * speed * Time.deltaTime);
+            yield return new WaitForEndOfFrame();
+            ChangeDirection();
+        }
+    }
+
+    void ChangeDirection()
+    {
+        waypointIndex++;
+        if(waypointIndex > waypoints.Count)
+        waypointIndex = 0;
+        
+        StopAllCoroutines();
+        direction *= -1; 
+        transform.localScale = new Vector3(direction, 1, 1);
+        StartCoroutine(PatrolRoutine());
+    }
+
     void OnCollisionEnter2D(Collision2D collision)
     {
         Debug.Log(collision.gameObject.name);
 
         if(collision.gameObject.CompareTag("Player"))
         {
-            _anim.SetTrigger(triggerAttack);
+            _anim.GetAnimByType(EnemyAnimType.Attack);
             var health = collision.gameObject.GetComponent<HealthBase>();
 
             if(health != null)
@@ -54,7 +87,7 @@ public class EnemyBase : MonoBehaviour
 
     public void DeadAnimation()
     {
-        _anim.SetTrigger(triggerDead);
+        _anim.GetAnimByType(EnemyAnimType.Death);
         enemyCollider.enabled = false;
     }
 

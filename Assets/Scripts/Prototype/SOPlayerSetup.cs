@@ -23,11 +23,6 @@ public class SOPlayerSetup : ScriptableObject
     public bool readyToJump = true;
     public float jumpCoolDown = 0.1f;
     public Ease easeOut = Ease.OutBack;
-    public string triggerJump = "JumpUp";
-    //Jump Down
-    public string triggerFall = "JumpDown";
-    //Jump Landing
-    public string triggerLanding = "JumpLanding";
     public float timeToLand = 1;
     //Fall
     public bool isFalling;
@@ -38,17 +33,12 @@ public class SOPlayerSetup : ScriptableObject
     public float timeToFalling = 1;
     //Movement
     public float durationToSwipe = .1f;
-    public string triggerToWalk = "Walk";
-    public string triggerToRun = "Run";
+
     public bool direction;
     public bool isWalking;
     //Scene Start/Awake
-    public string triggerToAwake = "Awake";
     public float cutSceneDuration;
-    //Surprised
-    public string triggerSurprised = "Surprised";
 
     [Header("Live & Death")]
     public bool gameOver;
-    public string triggerDeath = "Death";
 }

@@ -41,7 +41,7 @@ public class HealthBase : MonoBehaviour, IDamageable
         }
     }
 
-    void Kill()
+    public virtual void Kill()
     {
         soHealth._isDead = true;
 

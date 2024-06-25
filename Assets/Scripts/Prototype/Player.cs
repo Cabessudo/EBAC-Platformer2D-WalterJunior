@@ -8,11 +8,11 @@ using UnityEngine.Video;
 using UnityEditor.Callbacks;
 using Ebac.Core.Singleton;
 
-public class Player : MonoBehaviour
+public class Player : Singleton<Player>
 {
 
     [Header("References")]
-    public Animator currentPlayer;
+    public PlayerAnim playerAnim;
     private Rigidbody2D _rb;
     public HealthPlayer playerHealth;
     public BoxCollider2D collisor;
@@ -33,43 +33,36 @@ public class Player : MonoBehaviour
         Land
     }
 
-    void Awake()
+    // Start is called before the first frame update
+    void Start()
     {
+        Init();
+        SOInit();
+        AwakeAnim();
+    }
+
+    void Init()
+    {
+        _rb = GetComponent<Rigidbody2D>();
+
+        //Set the action deatg
         if(playerHealth != null)
         {
             playerHealth.OnKill += OnPlayerDeath;
         }
 
-        currentPlayer = Instantiate(soPlayerSetup.anim, transform);
+        //Spawn the player and set the animator in the AnimPlayer Script
+        playerAnim.anim = Instantiate(soPlayerSetup.anim, transform);
 
+        //Set the distance to check if player hits the ground with the height of the box collider y
         if(collisor != null)
         {
             distToGround = collisor.bounds.extents.y;
         }
     }
 
-    private bool GroundCheck()
+    void SOInit()
     {
-        Debug.DrawLine(transform.position, Vector2.down, Color.red, distToGround + spaceToGround);
-        return Physics2D.Raycast(transform.position, Vector2.down, distToGround + spaceToGround);
-    }
-
-    void OnPlayerDeath()
-    {
-        playerHealth.OnKill -= OnPlayerDeath;
-        DeadAnimation();
-    }
-
-    // Start is called before the first frame update
-    void Start()
-    {
-        StartCoroutine(AwakeAnim());
-        Init();
-    }
-
-    void Init()
-    {
-        _rb = GetComponent<Rigidbody2D>();
         soPlayerSetup.gameOver = false;
         soPlayerSetup.direction = true;
         soPlayerSetup.isFalling = false;
@@ -84,8 +77,8 @@ public class Player : MonoBehaviour
         if(soPlayerSetup.cutScene) 
         {
             _rb.velocity = Vector3.zero;
-            currentPlayer.SetBool(soPlayerSetup.triggerToWalk, false);
-            currentPlayer.SetBool(soPlayerSetup.triggerToRun, false);
+            playerAnim.GetAnimByType(PlayerAnimType.Walk, false);
+            playerAnim.GetAnimByType(PlayerAnimType.Run, false);
             return;
         }
 
@@ -97,14 +90,25 @@ public class Player : MonoBehaviour
 
         if(!soPlayerSetup.gameOver)
         {          
-          Jump();
-          Movement();
-          Falling();
-          EndCutscene();
+            Jump();
+            Movement();
+            Falling();
         } 
             
     }
 
+    public void Cutscene()
+    {
+        soPlayerSetup.cutScene = true;
+    }
+
+    void OnPlayerDeath()
+    {
+        playerHealth.OnKill -= OnPlayerDeath;
+        DeadAnimation();
+    }
+
+    #region  Movement
     void Movement()
     {
         if(Input.GetKey(KeyCode.D))
@@ -112,19 +116,20 @@ public class Player : MonoBehaviour
             _rb.velocity = new Vector2(soPlayerSetup.speed, _rb.velocity.y);
             soPlayerSetup.direction = true;
             soPlayerSetup.isWalking = true;
-            currentPlayer.SetBool(soPlayerSetup.triggerToWalk, true);
+            playerAnim.GetAnimByType(PlayerAnimType.Walk, true);
+
         }
         else if(Input.GetKey(KeyCode.A))
         {
             _rb.velocity = new Vector2(-soPlayerSetup.speed, _rb.velocity.y);
             soPlayerSetup.direction = false;
             soPlayerSetup.isWalking = true;
-            currentPlayer.SetBool(soPlayerSetup.triggerToWalk, true);
+            playerAnim.GetAnimByType(PlayerAnimType.Walk, true);
         }
         else
         {
-            currentPlayer.SetBool(soPlayerSetup.triggerToWalk, false);
-            currentPlayer.SetBool(soPlayerSetup.triggerToRun, false);
+            playerAnim.GetAnimByType(PlayerAnimType.Walk, false);
+            playerAnim.GetAnimByType(PlayerAnimType.Run, false);
             soPlayerSetup.isWalking = false;
         }
 
@@ -137,12 +142,12 @@ public class Player : MonoBehaviour
         //Run
         if(Input.GetKey(KeyCode.LeftShift) && soPlayerSetup.isWalking)
         {
-            currentPlayer.SetBool(soPlayerSetup.triggerToRun, true);
+            playerAnim.GetAnimByType(PlayerAnimType.Run, true);
             soPlayerSetup.speed = soPlayerSetup.speedRun;
         }
         else 
         {
-            currentPlayer.SetBool(soPlayerSetup.triggerToRun, false);
+            playerAnim.GetAnimByType(PlayerAnimType.Run, false);
             soPlayerSetup.speed = soPlayerSetup.flatSpeed;
         }
 
@@ -157,6 +162,10 @@ public class Player : MonoBehaviour
         }
     }
 
+    #endregion
+
+    #region  Jump
+    
     void Jump()
     {
         if(Input.GetKeyDown(KeyCode.Space) && soPlayerSetup.grounded && !soPlayerSetup.gameOver && GroundCheck() && soPlayerSetup.readyToJump)
@@ -179,64 +188,31 @@ public class Player : MonoBehaviour
         }
     }
 
-    void JumpAnimation()
-    {
-        SwitchJumpStyle(JumpStyle.Up);
-        if(soPlayerSetup.direction)
-        {
-            _rb.transform.DOScaleX(soPlayerSetup.jumpScaleX, soPlayerSetup.jumpDuration / 2).SetEase(soPlayerSetup.easeOut).OnComplete(
-            delegate
-            {
-                _rb.transform.DOScaleX(1, soPlayerSetup.jumpDuration / 2).SetEase(soPlayerSetup.easeOut);
-            });
-        }    
-        else
-        {
-            _rb.transform.DOScaleX(-soPlayerSetup.jumpScaleX, soPlayerSetup.jumpDuration/2).SetEase(soPlayerSetup.easeOut).OnComplete(
-            delegate
-            {
-                _rb.transform.DOScaleX(-1, soPlayerSetup.jumpDuration/2).SetEase(soPlayerSetup.easeOut);
-            });
-        }
 
-        _rb.transform.DOScaleY(soPlayerSetup.jumpScaleY, soPlayerSetup.jumpDuration/2).SetEase(soPlayerSetup.easeOut).OnComplete(
-        delegate
-        {
-            _rb.transform.DOScaleY(1, soPlayerSetup.jumpDuration/2).SetEase(soPlayerSetup.easeOut);
-        });
+
+
+    IEnumerator JumpReset()
+    {
+        yield return new WaitForSeconds(soPlayerSetup.jumpCoolDown);
+        soPlayerSetup.readyToJump = true;
     }
 
-    public void OnCollisionEnter2D(Collision2D collision)
+    #endregion
+
+    #region Falling
+
+    void Falling()
     {
-        if(collision.gameObject.CompareTag("Ground") && !soPlayerSetup.grounded && !soPlayerSetup.gameOver)
+        if(!soPlayerSetup.grounded && soPlayerSetup.isFalling && !soPlayerSetup.gameOver)
         {
-            PS_dust.Play();
-            Land();
-            soPlayerSetup.grounded = true;
-            soPlayerSetup.isFalling = false;
+            playerAnim.GetAnimByType(PlayerAnimType.Fall);
         }
     }
-
-    void OnTriggerEnter2D(Collider2D other)
-    {
-        if(other.gameObject.CompareTag("Cutscene") && !soPlayerSetup.gameOver)
-        {
-            soPlayerSetup.readyToJump = false;
-        }
-    }
-
-    void OnTriggerExit2D(Collider2D other)
-    {
-        if(other.gameObject.CompareTag("Cutscene") && !soPlayerSetup.gameOver)
-        {
-            soPlayerSetup.readyToJump = true;
-        }
-    }    
 
     void Land()
     {
         VFXManager.Instance.PlayVFXByType(VFXManager.VFXType.Jump, transform.position);
-        SwitchJumpStyle(JumpStyle.Land);
+        playerAnim.GetAnimByType(PlayerAnimType.Land);
 
         _rb.transform.DOKill();
 
@@ -265,18 +241,71 @@ public class Player : MonoBehaviour
             });
     }
 
-    void Falling()
+    #endregion
+
+    #region Colliders
+
+    public void OnCollisionEnter2D(Collision2D collision)
     {
-        if(!soPlayerSetup.grounded && soPlayerSetup.isFalling && !soPlayerSetup.gameOver)
+        if(collision.gameObject.CompareTag("Ground") && !soPlayerSetup.grounded && !soPlayerSetup.gameOver)
         {
-            SwitchJumpStyle(JumpStyle.Fall);
+            PS_dust.Play();
+            Land();
+            soPlayerSetup.grounded = true;
+            soPlayerSetup.isFalling = false;
         }
     }
 
-    IEnumerator JumpReset()
+    void OnTriggerEnter2D(Collider2D other)
     {
-        yield return new WaitForSeconds(soPlayerSetup.jumpCoolDown);
-        soPlayerSetup.readyToJump = true;
+        if(other.gameObject.CompareTag("Cutscene") && !soPlayerSetup.gameOver)
+        {
+            soPlayerSetup.readyToJump = false;
+        }
+    }
+
+    void OnTriggerExit2D(Collider2D other)
+    {
+        if(other.gameObject.CompareTag("Cutscene") && !soPlayerSetup.gameOver)
+        {
+            soPlayerSetup.readyToJump = true;
+        }
+    }    
+
+    private bool GroundCheck()
+    {
+        Debug.DrawLine(transform.position, Vector2.down, Color.red, distToGround + spaceToGround);
+        return Physics2D.Raycast(transform.position, Vector2.down, distToGround + spaceToGround);
+    }
+    #endregion
+
+    #region Animation
+
+    void JumpAnimation()
+    {
+        playerAnim.GetAnimByType(PlayerAnimType.Jump);
+        if(soPlayerSetup.direction)
+        {
+            _rb.transform.DOScaleX(soPlayerSetup.jumpScaleX, soPlayerSetup.jumpDuration / 2).SetEase(soPlayerSetup.easeOut).OnComplete(
+            delegate
+            {
+                _rb.transform.DOScaleX(1, soPlayerSetup.jumpDuration / 2).SetEase(soPlayerSetup.easeOut);
+            });
+        }    
+        else
+        {
+            _rb.transform.DOScaleX(-soPlayerSetup.jumpScaleX, soPlayerSetup.jumpDuration/2).SetEase(soPlayerSetup.easeOut).OnComplete(
+            delegate
+            {
+                _rb.transform.DOScaleX(-1, soPlayerSetup.jumpDuration/2).SetEase(soPlayerSetup.easeOut);
+            });
+        }
+
+        _rb.transform.DOScaleY(soPlayerSetup.jumpScaleY, soPlayerSetup.jumpDuration/2).SetEase(soPlayerSetup.easeOut).OnComplete(
+        delegate
+        {
+            _rb.transform.DOScaleY(1, soPlayerSetup.jumpDuration/2).SetEase(soPlayerSetup.easeOut);
+        });
     }
 
     IEnumerator FallingAnimantion()
@@ -288,37 +317,21 @@ public class Player : MonoBehaviour
     IEnumerator LandAnimation()
     {
         yield return new WaitForSeconds(soPlayerSetup.timeToLand);
-        currentPlayer.SetBool(soPlayerSetup.triggerLanding, false);
+        playerAnim.GetAnimByType(PlayerAnimType.Land, false);
     }
 
-    void SwitchJumpStyle(JumpStyle newStyle)
-    {
-        currentJump = newStyle;
-        
-        if(newStyle == JumpStyle.Up) currentPlayer.SetTrigger(soPlayerSetup.triggerJump);
-        if(newStyle == JumpStyle.Fall) currentPlayer.SetTrigger(soPlayerSetup.triggerFall);
-        if(newStyle == JumpStyle.Land) currentPlayer.SetTrigger(soPlayerSetup.triggerLanding);
-    }
 
-    IEnumerator AwakeAnim()
+    void AwakeAnim()
     {
         soPlayerSetup.cutScene = true;
-        currentPlayer.SetTrigger(soPlayerSetup.triggerToAwake);
-        yield return new WaitForSeconds(soPlayerSetup.cutSceneDuration);
-        soPlayerSetup.cutScene = false;
+        playerAnim.GetAnimByType(PlayerAnimType.Awake);
     }
 
 
     public void DeadAnimation()
     {
-        currentPlayer.SetTrigger(soPlayerSetup.triggerDeath);
+        playerAnim.GetAnimByType(PlayerAnimType.Death);
     }
 
-    void EndCutscene()
-    {
-        if(transform.position.x >= 55)
-        {
-            soPlayerSetup.cutScene = true;
-        }
-    }
+    #endregion
 }
