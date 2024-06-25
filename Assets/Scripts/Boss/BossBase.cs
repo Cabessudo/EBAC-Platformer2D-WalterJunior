@@ -43,6 +43,7 @@ public class BossBase : MonoBehaviour
 
     void Update()
     {
+        CheckDefeated();
         Slam();
 
         if(check.player)
@@ -53,8 +54,8 @@ public class BossBase : MonoBehaviour
             Attack();
         }
     }
-    
 
+    #region  ShootAttack
     [NaughtyAttributes.Button]
     public void Attack()
     {
@@ -104,6 +105,9 @@ public class BossBase : MonoBehaviour
     {
         anim.GetAnimByType(BossAnimType.Shoot);
     }
+    #endregion
+
+    #region SlamAttack
 
     [NaughtyAttributes.Button]
     void SlamAttack()
@@ -141,7 +145,7 @@ public class BossBase : MonoBehaviour
             transform.Translate(Vector3.down * slamSpeed * Time.deltaTime);
         }
     }
-
+    #endregion
 
     [NaughtyAttributes.Button]
     void Stunned()
@@ -175,10 +179,10 @@ public class BossBase : MonoBehaviour
 
     }
 
-    void OnTriggerEnter2D(Collider2D other)
+    void OnCollisionEnter2D(Collision2D collision)
     {
         //Stop Slam and Start Stunned
-        if(other.gameObject.CompareTag("Ground") && _canSlam)
+        if(collision.gameObject.CompareTag("Ground") && _canSlam)
         {
             anim.GetAnimByType(BossAnimType.Slam);
             _canSlam = false;
@@ -198,9 +202,17 @@ public class BossBase : MonoBehaviour
         sideLimits.SetActive(b);
     }
 
+    void CheckDefeated()
+    {
+        if(bossHealth.soHealth._isDead && !isAttacking)
+        {
+            anim.GetAnimByType(BossAnimType.Death);
+        }
+    }
+
     void OnDeath()
     {
-        EnableAndDisableWalls(false);
         bossHealth.OnKill -= OnDeath;
+        EnableAndDisableWalls(false);
     }
 }

@@ -11,9 +11,9 @@ public class EnemyBase : MonoBehaviour
     public HealthBase enemyHealth;
     public AudioClip damageAudio;
     public AudioSource enemyAudio;
-    [SerializeField] EnemyAnim _anim;
+    public EnemyAnim anim;
     [SerializeField] List<Transform> waypoints;
-    protected int waypointIndex;
+    public int waypointIndex;
 
     [Header("Parameters")]
     protected int direction = 1;
@@ -27,14 +27,14 @@ public class EnemyBase : MonoBehaviour
             enemyHealth.OnKill += OnEnemyDeath;
         }
 
-        StartCoroutine(PatrolRoutine());
-
+        Patrol();
     }
 
     void OnEnemyDeath()
     {
         enemyHealth.OnKill -= OnEnemyDeath;
         DeadAnimation();
+        StopAllCoroutines();
     }
 
     public virtual void Patrol()
@@ -45,25 +45,35 @@ public class EnemyBase : MonoBehaviour
 
     IEnumerator PatrolRoutine()
     {
-        // _anim.GetAnimByType(EnemyAnimType.Run);
-        while(Vector3.Distance(transform.position, waypoints[waypointIndex].position) < 0.1f)
+        
+        var waypointPos = new Vector2(waypoints[waypointIndex].position.x, transform.position.y);
+        while(Vector3.Distance(transform.position, waypoints[waypointIndex].position) > 0.1f)
         {
-            transform.Translate(Vector3.left * speed * Time.deltaTime);
+            LookAtWaypoint();
+            transform.position = Vector3.MoveTowards(transform.position, waypointPos, speed * Time.deltaTime);
             yield return new WaitForEndOfFrame();
-            ChangeDirection();
         }
+
+        yield return new WaitForSeconds(1);
+        ChangeDirection();
     }
 
     void ChangeDirection()
     {
-        waypointIndex++;
-        if(waypointIndex > waypoints.Count)
-        waypointIndex = 0;
-        
         StopAllCoroutines();
-        direction *= -1; 
-        transform.localScale = new Vector3(direction, 1, 1);
+        waypointIndex++;
+        if(waypointIndex > waypoints.Count - 1) waypointIndex = 0;
         StartCoroutine(PatrolRoutine());
+    }
+
+    void LookAtWaypoint()
+    {
+        transform.localScale = new Vector3(direction, 1, 1);
+        if(waypoints[waypointIndex].position.x > transform.position.x)
+            direction = -1;
+
+        if(waypoints[waypointIndex].position.x < transform.position.x)
+            direction = 1;
     }
 
     void OnCollisionEnter2D(Collision2D collision)
@@ -72,7 +82,7 @@ public class EnemyBase : MonoBehaviour
 
         if(collision.gameObject.CompareTag("Player"))
         {
-            _anim.GetAnimByType(EnemyAnimType.Attack);
+            anim.GetAnimByType(EnemyAnimType.Attack);
             var health = collision.gameObject.GetComponent<HealthBase>();
 
             if(health != null)
@@ -87,7 +97,7 @@ public class EnemyBase : MonoBehaviour
 
     public void DeadAnimation()
     {
-        _anim.GetAnimByType(EnemyAnimType.Death);
+        anim.GetAnimByType(EnemyAnimType.Death);
         enemyCollider.enabled = false;
     }
 

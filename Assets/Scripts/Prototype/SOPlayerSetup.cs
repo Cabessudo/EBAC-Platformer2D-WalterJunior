@@ -15,7 +15,7 @@ public class SOPlayerSetup : ScriptableObject
 
     [Header("Animation")]
     public Animator anim;
-    public bool cutScene;
+    public bool cutscene;
     //Jump Up
     public float jumpDuration = 1;
     public float jumpScaleY = 1.2f;

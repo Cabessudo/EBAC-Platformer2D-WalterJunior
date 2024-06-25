@@ -9,7 +9,9 @@ public class FlashColor : MonoBehaviour
     //Damage Color
     public List<SpriteRenderer> spriteRenderers;
     public Color color = Color.red;
+    public Color immuneColor;
     public float duration = 0.1f;
+
     //Normal Color
     public SO_Health soHealth;
     private Color normalColor = Color.white;
@@ -37,6 +39,33 @@ public class FlashColor : MonoBehaviour
         foreach(var s in spriteRenderers)
         {
             _currentTween = s.DOColor(color, duration).SetLoops(2, LoopType.Yoyo);
+        }
+    }
+
+    public void Immune()
+    {
+        StartCoroutine(ImmuneRoutine());
+    }
+
+    IEnumerator ImmuneRoutine()
+    {
+        soHealth.canHit = false;
+
+        if(_currentTween != null)
+            _currentTween.Kill();
+
+        foreach(var s in spriteRenderers)
+        {
+            _currentTween = s.DOColor(immuneColor, duration).SetLoops(-1, LoopType.Yoyo);
+        }
+
+        yield return new WaitForSeconds(soHealth.timeImmune);
+
+        soHealth.canHit = true;
+        if(_currentTween != null)
+        {
+            _currentTween.Kill();
+            spriteRenderers.ForEach(i => i.color = normalColor);
         }
     }
 

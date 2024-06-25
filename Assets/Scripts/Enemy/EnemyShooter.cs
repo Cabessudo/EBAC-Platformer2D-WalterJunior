@@ -7,7 +7,7 @@ public class EnemyShooter : EnemyBase
     [Header("Shooter")]
     public EnemyGunBase enemyGun;
     public PlayerCheck check;
-    private bool isAttacking;
+    public bool isAttacking;
 
     [Header("Shoot Parameters")]
     public float timePerShoot; 
@@ -20,8 +20,10 @@ public class EnemyShooter : EnemyBase
         {
             Shoot();
         }
-        else
+        
+        if(!check.player && isAttacking)
         {
+            isAttacking = false;
             Patrol();
         }
     }
@@ -37,9 +39,14 @@ public class EnemyShooter : EnemyBase
     {
         while(true)
         {
-            enemyGun.Shoot();
+            enemyGun.Shoot(ShootAnim);
             yield return new WaitForSeconds(timePerShoot);
         }
+    }
+
+    void ShootAnim()
+    {
+        anim.GetAnimByType(EnemyAnimType.Attack);
     }
 
     void LookAtPlayer()

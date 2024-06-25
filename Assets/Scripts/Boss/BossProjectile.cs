@@ -6,6 +6,7 @@ public class BossProjectile : MonoBehaviour
 {
     public int damage = 1;
     public float speed;
+    private bool onceHit = true;
     
     void Start()
     {
@@ -21,7 +22,12 @@ public class BossProjectile : MonoBehaviour
     void OnCollisionEnter2D(Collision2D collision)
     {
         var damageable = collision.transform.GetComponent<IDamageable>();
-        damageable?.Damage(damage);
+        if(damageable != null && onceHit)
+        {
+            onceHit = false;
+            damageable.Damage(damage);
+            Destroy(gameObject);
+        }
     }
     
 }

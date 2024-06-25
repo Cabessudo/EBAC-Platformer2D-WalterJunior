@@ -54,7 +54,7 @@ public class Fairy : MonoBehaviour
     {
         HideFairy();
         transform.DOMoveX(xFinalStop, startFinalDuration).SetEase(xEase).SetDelay(awakeDuration);
-        player.soPlayerSetup.cutScene = false;
+        player.soPlayerSetup.cutscene = false;
     }
 
     public void ShowFairy()

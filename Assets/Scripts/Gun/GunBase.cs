@@ -22,12 +22,12 @@ public class GunBase : MonoBehaviour
     }
     void Update()
     {
-        if(Input.GetKeyDown(keyToShoot) && !UIPause.Instance.pause && !player.soPlayerSetup.cutScene)
+        if(Input.GetKeyDown(keyToShoot) && !UIPause.Instance.pause && !player.soPlayerSetup.cutscene)
         {
             _isShooting = true;
             _currentCoroutine = StartCoroutine(ShootRotine());
         }        
-        else if(Input.GetKeyUp(keyToShoot) && !UIPause.Instance.pause && !player.soPlayerSetup.cutScene)
+        else if(Input.GetKeyUp(keyToShoot) && !UIPause.Instance.pause && !player.soPlayerSetup.cutscene)
         {
             _isShooting = false;
             _anim.SetBool(triggerToShoot, false);

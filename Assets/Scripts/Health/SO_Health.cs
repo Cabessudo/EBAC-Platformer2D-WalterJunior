@@ -9,5 +9,7 @@ public class SO_Health : ScriptableObject
     public int currentLife;
     public bool destroyOnKill;
     public bool _isDead = false;
+    public bool canHit = true;
     public float delayToDie = 1;
+    public float timeImmune = 1;
 }

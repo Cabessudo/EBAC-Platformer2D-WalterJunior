@@ -31,6 +31,7 @@ public class HealthPlayer : HealthBase
     public override void Damage(int damage)
     {
         base.Damage(damage);
+        flashColor.Immune();
         hurtAudio.Play();
         HeartUI();
     }

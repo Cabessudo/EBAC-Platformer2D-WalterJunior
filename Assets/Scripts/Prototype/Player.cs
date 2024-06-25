@@ -74,7 +74,7 @@ public class Player : Singleton<Player>
     // Update is called once per frame
     void Update()
     {
-        if(soPlayerSetup.cutScene) 
+        if(soPlayerSetup.cutscene) 
         {
             _rb.velocity = Vector3.zero;
             playerAnim.GetAnimByType(PlayerAnimType.Walk, false);
@@ -99,7 +99,7 @@ public class Player : Singleton<Player>
 
     public void Cutscene()
     {
-        soPlayerSetup.cutScene = true;
+        soPlayerSetup.cutscene = true;
     }
 
     void OnPlayerDeath()
@@ -323,7 +323,7 @@ public class Player : Singleton<Player>
 
     void AwakeAnim()
     {
-        soPlayerSetup.cutScene = true;
+        soPlayerSetup.cutscene = true;
         playerAnim.GetAnimByType(PlayerAnimType.Awake);
     }
 
