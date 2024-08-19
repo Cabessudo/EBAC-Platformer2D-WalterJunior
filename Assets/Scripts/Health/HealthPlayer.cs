@@ -5,34 +5,65 @@ using UnityEngine.UI;
 
 public class HealthPlayer : HealthBase
 {
-    public GameObject[] hearts;
-    public AudioSource hurtAudio;
 
-    void Update()
+    [Header("Hearts")]
+    public Transform heartCase;
+    [HideInInspector] public List<GameObject> hearts;
+    public GameObject heartPref;
+    public bool _checkHearts;
+
+
+    public override void Start()
     {
-        HeartUI();
+        base.Start();
+        CheckHeart();
     }
     
-    public void HeartUI()
+    public void UpdateHeartUI()
     {
-        for(int i = 0; i < hearts.Length; i++)
+        if(hearts.Count > 0)
         {
-            if(i < soHealth.currentLife)
+            for(int i = 0; i < hearts.Count; i++)
             {
-                hearts[i].SetActive(true);
-            }
-            else
-            {
-                hearts[i].SetActive(false);
+                if(i < currLife)
+                {
+                    hearts[i].SetActive(true);
+                }
+                else
+                {
+                    hearts[i].SetActive(false);
+                }
             }
         }
     }
 
     public override void Damage(int damage)
     {
+        if(!soHealth.canHit) return;
+
         base.Damage(damage);
-        flashColor.Immune();
-        hurtAudio.Play();
-        HeartUI();
+        UpdateHeartUI();        
+        if(soHealth._isDead) return;
+        flashColor?.Immune();
+    }
+
+    void CheckHeart()
+    {
+        for(int i = 0; i < soHealth.maxLife; i++)
+        {
+            var heart = Instantiate(heartPref, heartCase);
+            hearts.Add(heart);
+        }
+
+        UpdateHeartUI();
+
+    }
+
+    public void AddHeart()
+    {
+        var heart = Instantiate(heartPref, heartCase);
+        hearts.Add(heart);
+        currLife++;
+        UpdateHeartUI();
     }
 }

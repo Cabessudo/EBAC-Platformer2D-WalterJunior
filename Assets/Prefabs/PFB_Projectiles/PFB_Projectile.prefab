@@ -98,9 +98,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 56ce76e5332f349499e2d11d359108eb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  projectDirection: {x: 0, y: -50, z: 0}
-  side: 1
-  timeToDestroy: 1
+  projectDirection: {x: 0, y: -50}
+  speed: 1
+  timeToDestroy: 0.5
+  projectileDamage: 1
 --- !u!70 &6731673581261558830
 CapsuleCollider2D:
   m_ObjectHideFlags: 0

@@ -4,30 +4,34 @@ using UnityEngine;
 
 public class ProjectileBase : MonoBehaviour
 {
-    public Vector3 projectDirection;
-    public float side = 1;
+    public Vector2 projectDirection;
+    public float speed = 1;
     public float timeToDestroy = 1;
     public int projectileDamage = 1;
+    protected bool hitChance = false;
 
     void Awake()
     {
-        Destroy(gameObject, 1);
+        Destroy(gameObject, timeToDestroy);
     }
 
     void Update()
     {
-        transform.Translate(projectDirection * Time.deltaTime * side);
+        transform.Translate(projectDirection * Time.deltaTime * speed);
     }
 
-    public void OnTriggerEnter2D(Collider2D other)
+    public virtual void OnTriggerEnter2D(Collider2D other)
     {
-        var enemy = other.gameObject.GetComponent<EnemyBase>();
-        var enemyHealth = other.gameObject.GetComponent<HealthBase>();
-
-        if(enemy != null && !enemyHealth.soHealth._isDead)
+        if(other.gameObject.CompareTag("Enemy") && !hitChance)
         {
-            enemy.TakeDamage(projectileDamage);
-            gameObject.SetActive(false);
+            hitChance = true;
+            var enemyHealth = other.gameObject.GetComponent<HealthBase>();
+
+            if(enemyHealth != null && !enemyHealth.soHealth._isDead)
+            {
+                enemyHealth.Damage(projectileDamage);
+                gameObject.SetActive(false);
+            }
         }
     }
 }

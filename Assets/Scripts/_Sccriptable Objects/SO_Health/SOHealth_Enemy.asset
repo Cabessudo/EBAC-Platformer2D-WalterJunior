@@ -12,8 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b7b75c7aff300284d8f708ee6e1b48fb, type: 3}
   m_Name: SOHealth_Enemy
   m_EditorClassIdentifier: 
-  _life: 3
-  currentLife: 3
+  maxLife: 10
   destroyOnKill: 1
-  _isDead: 0
   delayToDie: 1
+  timeImmune: 1
+  _isDead: 0
+  canHit: 1

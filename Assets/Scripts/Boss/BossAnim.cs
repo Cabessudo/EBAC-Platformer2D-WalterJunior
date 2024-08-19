@@ -8,7 +8,8 @@ public enum BossAnimType
     Slam,
     Stunned,
     Idle,
-    Death
+    Death,
+    Angry
 }
 
 public class BossAnim : AnimationBase<BossAnimType>

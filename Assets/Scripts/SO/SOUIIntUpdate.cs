@@ -10,6 +10,6 @@ public class SOUIIntUpdate : MonoBehaviour
 
     public void UpdateValue()
     {
-        uiTextValue.SetText(sOInt.value + " x");
+        uiTextValue.SetText("x " + sOInt.value);
     }
 }

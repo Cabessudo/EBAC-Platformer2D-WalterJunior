@@ -2,14 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
-using UnityEngine.UI;
-using UnityEngine.Video;
-// using Unity.VisualScripting;
-using UnityEditor.Callbacks;
 using Ebac.Core.Singleton;
 
 public class Player : Singleton<Player>
 {
+    public bool awakeAnim;
 
     [Header("References")]
     public PlayerAnim playerAnim;
@@ -17,7 +14,6 @@ public class Player : Singleton<Player>
     public HealthPlayer playerHealth;
     public BoxCollider2D collisor;
     public ParticleSystem PS_dust;
-    public JumpStyle currentJump;
 
     [Header("Player Setup")]
     public SOPlayerSetup soPlayerSetup;
@@ -25,12 +21,11 @@ public class Player : Singleton<Player>
     [Header("Jump Setup Check")]
     public float distToGround;
     public float spaceToGround = .1f;
-    
-    public enum JumpStyle
+
+    protected override void Awake()
     {
-        Up,
-        Fall,
-        Land
+        base.Awake();
+        soPlayerSetup.cutscene = false;
     }
 
     // Start is called before the first frame update
@@ -38,7 +33,7 @@ public class Player : Singleton<Player>
     {
         Init();
         SOInit();
-        AwakeAnim();
+        if(awakeAnim) AwakeAnim();
     }
 
     void Init()
@@ -69,6 +64,7 @@ public class Player : Singleton<Player>
         soPlayerSetup.grounded = true;
         soPlayerSetup.readyToJump = true;
         soPlayerSetup.isWalking = false;
+        soPlayerSetup.doubleJump = true;
     }
 
     // Update is called once per frame
@@ -90,7 +86,7 @@ public class Player : Singleton<Player>
 
         if(!soPlayerSetup.gameOver)
         {          
-            Jump();
+            JumpUpdate();
             Movement();
             Falling();
         } 
@@ -166,36 +162,39 @@ public class Player : Singleton<Player>
 
     #region  Jump
     
-    void Jump()
+    void JumpUpdate()
     {
         if(Input.GetKeyDown(KeyCode.Space) && soPlayerSetup.grounded && !soPlayerSetup.gameOver && GroundCheck() && soPlayerSetup.readyToJump)
         {
-            VFXManager.Instance.PlayVFXByType(VFXManager.VFXType.Jump, transform.position);
-            PS_dust.Stop();
-            _rb.velocity = Vector2.up * soPlayerSetup.jumpForce;
-            soPlayerSetup.grounded = false;
+            Jump();
+        }
 
-            if(soPlayerSetup.direction)
-            _rb.transform.localScale = Vector2.one;
-            else
-            _rb.transform.localScale = new Vector2(-1, 1);
-
-            _rb.transform.DOKill();
-            
-            JumpAnimation();
-            StartCoroutine(FallingAnimantion());
-            StartCoroutine(JumpReset());
+        if(Input.GetKeyDown(KeyCode.Space) && soPlayerSetup.doubleJump && !soPlayerSetup.gameOver && !GroundCheck())
+        {
+            soPlayerSetup.doubleJump = false;
+            StopAllCoroutines();
+            Jump();
         }
     }
 
-
-
-
-    IEnumerator JumpReset()
+    void Jump()
     {
-        yield return new WaitForSeconds(soPlayerSetup.jumpCoolDown);
-        soPlayerSetup.readyToJump = true;
+        VFXManager.Instance.PlayVFXByType(VFXManager.VFXType.Jump, transform.position);
+        PS_dust.Stop();
+        _rb.velocity = Vector2.up * soPlayerSetup.jumpForce;
+        soPlayerSetup.grounded = false;
+
+        if(soPlayerSetup.direction)
+        _rb.transform.localScale = Vector2.one;
+        else
+        _rb.transform.localScale = new Vector2(-1, 1);
+
+        _rb.transform.DOKill();
+        
+        JumpAnimation();
+        StartCoroutine(FallingAnimantion());
     }
+
 
     #endregion
 
@@ -253,6 +252,7 @@ public class Player : Singleton<Player>
             Land();
             soPlayerSetup.grounded = true;
             soPlayerSetup.isFalling = false;
+            soPlayerSetup.doubleJump = true;
         }
     }
 
@@ -334,4 +334,9 @@ public class Player : Singleton<Player>
     }
 
     #endregion
+
+    void OnDestroy()
+    {
+        transform.DOKill();
+    }
 }

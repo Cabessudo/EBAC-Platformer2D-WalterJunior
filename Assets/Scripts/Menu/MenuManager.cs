@@ -1,41 +1,42 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Ebac.Core.Singleton;
+using UnityEngine.UI;
+using DG.Tweening;
 
 public class MenuManager : MonoBehaviour
 {
-    public List<animMenu> animMenus;
+    [Header("References")]
+    public GameObject settingsCase;
+    public List<Transform> buttons; 
+    public List<Transform> settings;
 
-    public void OnMenu(string animParameter)
+    [Header("Buttons Anim")]
+    public Ease ease = Ease.Linear;
+    public float duration = 0.2f;
+
+    [Header("Change Scene")]
+    public LoadScene loadScene;
+    public Image changeScene;
+    public int scene = 1;
+    private int changeDuration = 1;
+
+    public void ShowMainButtons()
     {
-        foreach(var a in animMenus)
-        {
-            if(a.animParameter == animParameter)
-            {
-                a.off = false;
-                a.anim.SetBool(a.animParameter, a.off);
-            }
-        }
+        settings.ForEach(i => i.DOScale(0, duration).SetEase(ease));
+        buttons.ForEach(i => i.DOScale(1, duration).SetEase(ease));
     }
 
-    public void OffMenu(string animParameter)
+    public void ShowSettings()
     {
-        foreach(var a in animMenus)
-        {
-            if(a.animParameter == animParameter)
-            {
-                a.off = true;
-                a.anim.SetBool(a.animParameter, a.off);
-            }
-        }
+        settingsCase.SetActive(true);
+        buttons.ForEach(i => i.DOScale(0, duration).SetEase(ease));
+        settings.ForEach(i => i.DOScale(1, duration).SetEase(ease));
     }
 
-    [System.Serializable]
-    public class animMenu
+    public void ChangeScene()
     {
-        public Animator anim;
-        public string animParameter;
-        public bool off;
+        changeScene.DOColor(Color.black, changeDuration).SetEase(ease).OnComplete(
+            delegate{ loadScene.Load(scene);});
     }
 }

@@ -40,20 +40,21 @@ public class Fairy : MonoBehaviour
 
     void AwakePlayerAnim()
     {
-        transform.DOMoveX(xStartAnim, normalDuration).SetLoops(-1, LoopType.Yoyo).SetEase(xEase);
+        transform.DOMoveX(xStartAnim, normalDuration).SetLoops(-1, LoopType.Yoyo).SetEase(xEase).SetRelative();
         Invoke(nameof(FirstStop), firstStopDelay);
     }
 
     void FirstStop()
     {
-        transform.DOMoveX(xFirstStop, normalDuration).SetEase(xEase).OnComplete(
+        transform.DOMoveX(xFirstStop, normalDuration).SetEase(xEase).SetRelative().OnComplete(
             delegate{ AwakeFairy(); });
     }
 
     public void FinalStop()
     {
         HideFairy();
-        transform.DOMoveX(xFinalStop, startFinalDuration).SetEase(xEase).SetDelay(awakeDuration);
+        player.playerAnim.GetAnimByType(PlayerAnimType.Idle);
+        transform.DOMoveX(xFinalStop, startFinalDuration).SetEase(xEase).SetDelay(awakeDuration).SetRelative();
         player.soPlayerSetup.cutscene = false;
     }
 
@@ -82,7 +83,7 @@ public class Fairy : MonoBehaviour
     IEnumerator AwakeRoutine()
     {
         yield return new WaitForSeconds(awakeDuration);
-        player.playerAnim.GetAnimByType(PlayerAnimType.Surprised);
+        player?.playerAnim.GetAnimByType(PlayerAnimType.Surprised);
         TalkManager.Instance.Talk(DialogueType.First_Dialogue);
     }
 }

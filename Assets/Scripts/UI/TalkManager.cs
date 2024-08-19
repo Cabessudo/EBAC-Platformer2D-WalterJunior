@@ -17,8 +17,7 @@ public class TalkManager : Singleton<TalkManager>
     public float textSpeed;
     public int indexSentence;
     private bool isTalking = false;
-    private bool showedText; 
-    private bool talkChance = true;
+    private bool showedText;
 
     void Update()
     {
@@ -73,7 +72,6 @@ public class TalkManager : Singleton<TalkManager>
     {
         _currDialogue.firstEvent?.Invoke();
         speechText.text = "";
-        talkChance = false; //To not double trigger the dialogue
         isTalking = true;
         dialogeImage.SetActive(true);
     } 
@@ -90,7 +88,6 @@ public class TalkManager : Singleton<TalkManager>
     void EndDialogue()
     {
         _currDialogue.lastEvent?.Invoke();
-        talkChance = true;
         isTalking = false;
         dialogeImage.SetActive(false);
 

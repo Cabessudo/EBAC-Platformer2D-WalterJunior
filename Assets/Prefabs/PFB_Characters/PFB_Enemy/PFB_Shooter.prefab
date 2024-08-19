@@ -90,7 +90,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5945736181812383795}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 10.01, y: 0, z: 0}
+  m_LocalPosition: {x: 10.2, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -117,7 +117,7 @@ GameObject:
   - component: {fileID: 5945736182762771781}
   m_Layer: 0
   m_Name: PFB_EnemyScript
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -153,18 +153,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   enemyCollider: {fileID: 5945736182762771896}
   enemyHealth: {fileID: 5945736182762771783}
-  damageAudio: {fileID: 8300000, guid: 430a890fb607d471db897c36240711fa, type: 3}
+  check: {fileID: 5945736182762771778}
   enemyAudio: {fileID: 5945736182762771781}
   anim: {fileID: 5945736182762771776}
   waypoints:
   - {fileID: 5945736182841291341}
   - {fileID: 5945736181812383792}
   waypointIndex: 0
-  damage: 1
   speed: 5
-  enemyGun: {fileID: 5945736182762771777}
-  check: {fileID: 5945736182762771778}
   isAttacking: 0
+  damage: 1
+  enemyGun: {fileID: 5945736182762771777}
+  timeToShoot: 0.5
   timePerShoot: 1.25
 --- !u!114 &5945736182762771778
 MonoBehaviour:
@@ -181,7 +181,7 @@ MonoBehaviour:
   playerMask:
     serializedVersion: 2
     m_Bits: 64
-  offset: {x: 0, y: 0.54}
+  playerPos: {fileID: 0}
   radius: 28.07
   player: 0
   checkOnce: 0
@@ -229,8 +229,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 90ddadaf84814444a87f022f0df1b27d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  objCollider: {fileID: 5945736182762771896}
   flashColor: {fileID: 8514759479129052370}
+  damageSound: {fileID: 5945736182762771781}
   soHealth: {fileID: 11400000, guid: dd3c6687981736641a7aa492d0bc5594, type: 2}
+  currLife: 0
 --- !u!61 &5945736182762771896
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -298,10 +301,10 @@ AudioSource:
   m_GameObject: {fileID: 5945736182762771901}
   m_Enabled: 1
   serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 0}
+  OutputAudioMixerGroup: {fileID: 8103258325129506564, guid: 576b7d2ae3356f14e9ea06fe015d9be4, type: 2}
+  m_audioClip: {fileID: 8300000, guid: 2662a34448ad7451dbb0fcc4c936754a, type: 3}
   m_PlayOnAwake: 0
-  m_Volume: 1
+  m_Volume: 0.5
   m_Pitch: 1
   Loop: 0
   Mute: 0
@@ -440,7 +443,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5945736182841291340}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -9.8, y: 0, z: 0}
+  m_LocalPosition: {x: -15.6, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -480,11 +483,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2674345021046439106, guid: 3de838754c767a446a5473969062a84e, type: 3}
       propertyPath: m_Bounds.m_Center.y
-      value: 2.1221445
+      value: 2.122144
       objectReference: {fileID: 0}
     - target: {fileID: 2674345021046439106, guid: 3de838754c767a446a5473969062a84e, type: 3}
       propertyPath: m_Bounds.m_Extent.x
       value: 2.9125853
+      objectReference: {fileID: 0}
+    - target: {fileID: 2674345021046439106, guid: 3de838754c767a446a5473969062a84e, type: 3}
+      propertyPath: m_Bounds.m_Extent.y
+      value: 3.3478546
       objectReference: {fileID: 0}
     - target: {fileID: 2944600070154927280, guid: 3de838754c767a446a5473969062a84e, type: 3}
       propertyPath: m_SortingOrder

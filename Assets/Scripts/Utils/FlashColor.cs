@@ -11,6 +11,7 @@ public class FlashColor : MonoBehaviour
     public Color color = Color.red;
     public Color immuneColor;
     public float duration = 0.1f;
+    private float timeToSetImmunity = .3f;
 
     //Normal Color
     public SO_Health soHealth;
@@ -38,34 +39,31 @@ public class FlashColor : MonoBehaviour
 
         foreach(var s in spriteRenderers)
         {
-            _currentTween = s.DOColor(color, duration).SetLoops(2, LoopType.Yoyo);
+            _currentTween = s.DOColor(color, duration).SetLoops(2, LoopType.Yoyo).OnComplete(
+                delegate
+                {
+                    spriteRenderers.ForEach(i => i.color = normalColor);
+                });
         }
     }
 
-    public void Immune()
+    public void DisableAllSprites()
     {
-        StartCoroutine(ImmuneRoutine());
-    }
-
-    IEnumerator ImmuneRoutine()
-    {
-        soHealth.canHit = false;
-
-        if(_currentTween != null)
-            _currentTween.Kill();
+        _currentTween?.Kill();
 
         foreach(var s in spriteRenderers)
         {
-            _currentTween = s.DOColor(immuneColor, duration).SetLoops(-1, LoopType.Yoyo);
+            s.enabled = false;                                                                                                                                                                                                                                                                        
         }
+    }
 
-        yield return new WaitForSeconds(soHealth.timeImmune);
-
-        soHealth.canHit = true;
-        if(_currentTween != null)
+    public void ChangeColor(Color c)
+    {
+        normalColor = c;
+        _currentTween?.Kill();
+        foreach(var s in spriteRenderers)
         {
-            _currentTween.Kill();
-            spriteRenderers.ForEach(i => i.color = normalColor);
+            _currentTween = s.DOColor(normalColor, duration);
         }
     }
 
@@ -77,4 +75,45 @@ public class FlashColor : MonoBehaviour
             spriteRenderers.ForEach(i => i.color = normalColor);
         }
     }
+
+    #region  Player Immunity
+
+    [NaughtyAttributes.Button]
+    public void Immune()
+    {
+        StartCoroutine(ImmuneRoutine());
+    }
+
+    IEnumerator ImmuneRoutine()
+    {
+        soHealth.canHit = false;
+
+        yield return new WaitForSeconds(timeToSetImmunity);
+
+        //Remove the current sprite animation
+        _currentTween?.Kill();
+
+        //Add immune sprite animation
+        foreach(var s in spriteRenderers)
+        {
+            _currentTween = s.DOColor(immuneColor, duration).SetLoops(-1, LoopType.Yoyo);
+        }
+
+        yield return new WaitForSeconds(soHealth.timeImmune);
+        StopImmuneRoutine();
+    }
+
+    void StopImmuneRoutine()
+    {
+        _currentTween?.Kill();
+        foreach(var s in spriteRenderers)
+        {
+            s.DOKill();
+            _currentTween = s.DOColor(normalColor, duration); 
+        }
+
+        soHealth.canHit = true;
+    }
+
+    #endregion
 }

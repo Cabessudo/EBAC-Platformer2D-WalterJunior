@@ -9,11 +9,10 @@ public class FollowPlayer : MonoBehaviour
     public GameUI gameUI;
     public Ease ease;
     public Ease easeEnd = Ease.Linear;
+    public bool cutscene;
     private bool _start;
-    private bool _theEnd;
     public float timeToStart = 1;
     public float duration = 1;
-    public float playerDis = 3;
     public float yPos = -2.5f;
     public float yEndPos = 25;
     public float endDuration = 2; 
@@ -23,19 +22,21 @@ public class FollowPlayer : MonoBehaviour
     void Start()
     {
         _player = GameObject.FindGameObjectWithTag("Player");
-        
-        StartCoroutine(AnimStart());
+
+        if(cutscene)
+        {
+            Player.Instance.soPlayerSetup.cutscene = true;
+            StartCoroutine(AnimStart());
+        }
     }
     // Update is called once per frame
     void Update()
     {
-        if(_player != null && _start)
-        StartFollowPlayer();
-        
-        // if(UIManager.Instance.index == 5 && !_theEnd)
-        // {
-        //     StartCoroutine(EndAnim());   
-        // }
+        if(_start || !cutscene)
+        {
+            if(_player != null )
+                StartFollowPlayer();   
+        }
     }
 
     IEnumerator AnimStart()
@@ -50,11 +51,15 @@ public class FollowPlayer : MonoBehaviour
         transform.position = new Vector3(_player.transform.position.x, transform.position.y, transform.position.z);     
     }
 
-    IEnumerator EndAnim()
+    public void TheEnd()
+    {
+        StartCoroutine(EndAnimRoutine());
+    }
+
+    IEnumerator EndAnimRoutine()
     {
         transform.DOMoveY(yEndPos, endDuration).SetEase(easeEnd).SetDelay(delay);
         yield return new WaitForSeconds(delayEnd);
         gameUI.ShowEndUI();
-        _theEnd = true;
     }
 }

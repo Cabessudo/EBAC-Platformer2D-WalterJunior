@@ -16,6 +16,7 @@ public class ItemCollatablesCoin : ItemCollatablesBase
     {
         base.OnCollect();
         ItemManager.Instance.AddCoins();
+        transform.DOKill();
         // coinSprite.enabled = false;
         // Instantiate(PS_Coin, transform.position, PS_Coin.transform.rotation);
         // Destroy(gameObject, .3f);

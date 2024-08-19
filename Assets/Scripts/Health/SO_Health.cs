@@ -5,11 +5,10 @@ using UnityEngine;
 [CreateAssetMenu]
 public class SO_Health : ScriptableObject
 {
-    public int _life = 3;
-    public int currentLife;
+    public int maxLife = 3;
     public bool destroyOnKill;
-    public bool _isDead = false;
-    public bool canHit = true;
     public float delayToDie = 1;
     public float timeImmune = 1;
+    public bool _isDead = false;
+    public bool canHit = true;
 }
